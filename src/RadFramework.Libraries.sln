@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadFramework.Libraries.Tests", "RadFramework.Libraries.Tests\RadFramework.Libraries.Tests.csproj", "{48E41A93-15D2-41C3-BB45-2461AFEB853F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadFramework.Libraries", "RadFramework.Libraries\RadFramework.Libraries.csproj", "{E6684932-56E7-4FDB-917E-14AE35F53283}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48E41A93-15D2-41C3-BB45-2461AFEB853F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48E41A93-15D2-41C3-BB45-2461AFEB853F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48E41A93-15D2-41C3-BB45-2461AFEB853F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48E41A93-15D2-41C3-BB45-2461AFEB853F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6684932-56E7-4FDB-917E-14AE35F53283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6684932-56E7-4FDB-917E-14AE35F53283}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6684932-56E7-4FDB-917E-14AE35F53283}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6684932-56E7-4FDB-917E-14AE35F53283}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
