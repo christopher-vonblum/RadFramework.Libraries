@@ -71,7 +71,7 @@ namespace RadFramework.Libraries.Threading.ObjectRegistries
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return registry.Keys.GetEnumerator();
+            return registry.Values.Select(v => v.Item2).GetEnumerator();
         }
     }
 }

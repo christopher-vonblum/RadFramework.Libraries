@@ -10,7 +10,7 @@ namespace RadFramework.Libraries.Threading.ObjectPools
     /// A simple object pool that maintains instances that can be reserved or wait in the pool.
     /// </summary>
     /// <typeparam name="TObject">The type of the objects to pool.</typeparam>
-    public class ObjectPool<TObject> : IDisposable where TObject : class
+    public class ObjectPoolWithFactory<TObject> : IDisposable where TObject : class
     {
         /// <summary>
         /// Delegate that constructs a pool object.
@@ -53,7 +53,7 @@ namespace RadFramework.Libraries.Threading.ObjectPools
         /// <param name="createObject">A delegate that constructs a pool object.</param>
         /// <param name="disposeObject">A delegate that disposes the pool object.</param>
         /// <param name="optimalPoolSize">The optimal count of pool instances.</param>
-        public ObjectPool(Func<TObject> createObject, Action<TObject> disposeObject, int optimalPoolSize)
+        public ObjectPoolWithFactory(Func<TObject> createObject, Action<TObject> disposeObject, int optimalPoolSize)
         {
             _createObject = createObject;
             _disposeObject = disposeObject;

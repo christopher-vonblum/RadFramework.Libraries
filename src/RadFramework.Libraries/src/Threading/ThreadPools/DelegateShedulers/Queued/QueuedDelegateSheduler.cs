@@ -20,7 +20,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
         public QueuedDelegateSheduler(
             int processingPoolSize,
             ThreadPriority priority,
-            string threadDescription)
+            string threadDescription = null)
             : base(
                 processingPoolSize,
                 priority,

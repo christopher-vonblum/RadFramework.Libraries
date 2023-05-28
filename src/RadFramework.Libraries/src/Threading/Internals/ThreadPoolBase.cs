@@ -1,5 +1,7 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Threading;
+using RadFramework.Libraries.Threading.Internals.ThreadAffinity;
 using RadFramework.Libraries.Threading.ObjectRegistries;
 
 namespace RadFramework.Libraries.Threading.Internals
@@ -31,6 +33,8 @@ namespace RadFramework.Libraries.Threading.Internals
         /// Holds the references to the looping threads.
         /// </summary>
         public ObjectReferenceRegistry<Thread> ProcessingThreadRegistry { get; } = new ObjectReferenceRegistry<Thread>();
+
+        private IThreadAffinityApi _threadAffinityApi;
         
         /// <summary>
         /// Is true when the processor gets teared down.
@@ -52,6 +56,9 @@ namespace RadFramework.Libraries.Threading.Internals
                                      ?? $"loopedProcessingMethod:{processingDelegate.Method.DeclaringType?.FullName}.{processingDelegate.Method.Name}, ThreadPoolType:{GetType().FullName}";
             ProcessWorkloadDelegate = processingDelegate;
             ProcessingThreadPriority = processingThreadPriority;
+            
+            _threadAffinityApi = Environment.
+            
             this.CreateThreads(processingThreadAmount, ProcessingLoop);
         }
 

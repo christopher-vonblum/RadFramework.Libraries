@@ -13,7 +13,7 @@ namespace RadFramework.Libraries.Threading.Semaphores
         /// <summary>
         /// Object pool for wait events sized by the thread count of the semaphore.
         /// </summary>
-        private ObjectPool<AutoResetEvent> waitEventPool;
+        private ObjectPoolWithFactory<AutoResetEvent> _waitEventPoolWithFactory;
         
         /// <summary>
         /// Maps thread id to wait event
@@ -27,7 +27,7 @@ namespace RadFramework.Libraries.Threading.Semaphores
         /// <param name="estimatedTrapThreadCount">A raw estimate amount of threads that will WaitHere().</param>
         public CounterSemaphore(int estimatedTrapThreadCount)
         {
-            waitEventPool = new ObjectPool<AutoResetEvent>(
+            _waitEventPoolWithFactory = new ObjectPoolWithFactory<AutoResetEvent>(
                 () => new AutoResetEvent(false),
                 @event => @event.Dispose(),
                 estimatedTrapThreadCount
@@ -40,7 +40,7 @@ namespace RadFramework.Libraries.Threading.Semaphores
         public void WaitHere()
         {
             // Use a pooled AutoResetEvent
-            AutoResetEvent waitEvent = waitEventPool.Reserve();
+            AutoResetEvent waitEvent = _waitEventPoolWithFactory.Reserve();
             
             // store the AutoResetEvent so that it can be a candidate for the Release(int) method
             eventsInTrapCollection[waitEvent] = waitEvent;
@@ -52,7 +52,7 @@ namespace RadFramework.Libraries.Threading.Semaphores
             eventsInTrapCollection.Remove(waitEvent);
             
             // tell the object pool to adopt the AutoResetEvent again
-            waitEventPool.Release(waitEvent);
+            _waitEventPoolWithFactory.Release(waitEvent);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace RadFramework.Libraries.Threading.Semaphores
         /// </summary>
         public void Dispose()
         {
-            waitEventPool.Dispose();
+            _waitEventPoolWithFactory.Dispose();
         }
     }
 }
