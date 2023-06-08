@@ -32,9 +32,7 @@ namespace RadFramework.Libraries.Threading.Internals
         /// <summary>
         /// Holds the references to the looping threads.
         /// </summary>
-        public ObjectReferenceRegistry<Thread> ProcessingThreadRegistry { get; } = new ObjectReferenceRegistry<Thread>();
-
-        private IThreadAffinityApi _threadAffinityApi;
+        public ObjectReferenceRegistry<PoolThread> ProcessingThreadRegistry { get; } = new ObjectReferenceRegistry<PoolThread>();
         
         /// <summary>
         /// Is true when the processor gets teared down.
@@ -56,8 +54,6 @@ namespace RadFramework.Libraries.Threading.Internals
                                      ?? $"loopedProcessingMethod:{processingDelegate.Method.DeclaringType?.FullName}.{processingDelegate.Method.Name}, ThreadPoolType:{GetType().FullName}";
             ProcessWorkloadDelegate = processingDelegate;
             ProcessingThreadPriority = processingThreadPriority;
-            
-            _threadAffinityApi = Environment.
             
             this.CreateThreads(processingThreadAmount, ProcessingLoop);
         }
@@ -107,11 +103,11 @@ namespace RadFramework.Libraries.Threading.Internals
         /// Waits for all threads in the pool collection to join.
         /// </summary>
         /// <param name="pool"></param>
-        protected void AwaitAllProcessingThreadsExit(ObjectReferenceRegistry<Thread> pool)
+        protected void AwaitAllProcessingThreadsExit(ObjectReferenceRegistry<PoolThread> pool)
         {
-            foreach (Thread thread in ProcessingThreadRegistry)
+            foreach (PoolThread thread in ProcessingThreadRegistry)
             {
-                thread.Join();
+                thread.ThreadingThread.Join();
             }
         }
     }

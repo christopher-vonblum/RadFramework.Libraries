@@ -9,6 +9,6 @@ namespace RadFramework.Libraries.Threading.Internals
         Action<Thread, Exception> OnError { get; }
         ThreadPriority ProcessingThreadPriority { get; }
         string ThreadDescription { get; }
-        ObjectReferenceRegistry<Thread> ProcessingThreadRegistry { get; }
+        ObjectReferenceRegistry<PoolThread> ProcessingThreadRegistry { get; }
     }
 }

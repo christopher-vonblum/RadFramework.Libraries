@@ -28,31 +28,8 @@ namespace RadFramework.Libraries.Threading.Internals
                 // notify that a thread was dispatched from the pool
                 threadPool.OnShiftedToLongRunningOperationsPool?.Invoke(potentialLongRunningThread);
 
-                // if a cancellation timeout is defined
-                if (threadPool.LongRunningOperationCancellationTimeout != 0)
-                {
-                    // wait until the cancellation timeout is reached
-                    potentialLongRunningThread.Join(threadPool.LongRunningOperationCancellationTimeout);
-
-                    // if the processing thread is still running
-                    if (potentialLongRunningThread.ThreadState == ThreadState.Running)
-                    {
-                        try
-                        {
-                            // abort the thread
-                            potentialLongRunningThread.Abort();
-                        }
-                        catch
-                        {
-                        }
-                    }
-                }
-                // no cancellationTimeout?
-                else
-                {
-                    // wait for the thread to join
-                    potentialLongRunningThread.Join();
-                }
+                // wait for the thread to join
+                potentialLongRunningThread.Join();
 
                 // Remove the thread from long running operations if present
                 threadPool.LongRunningOperationsRegistry.Unregister(potentialLongRunningThread);

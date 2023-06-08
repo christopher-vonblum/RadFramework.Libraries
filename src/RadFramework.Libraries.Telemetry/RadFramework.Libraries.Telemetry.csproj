@@ -1,17 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <LangVersion>default</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="MessagePack" Version="1.9.11" />
-      <PackageReference Include="RadFramework.Libraries.Threading" Version="1.0.2" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\RadFramework.Abstractions.Telemetry\RadFramework.Abstractions.Telemetry.csproj" />
     </ItemGroup>
 
 </Project>

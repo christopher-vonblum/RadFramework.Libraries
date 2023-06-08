@@ -14,10 +14,12 @@ namespace RadFramework.Libraries.Threading.Internals
             int amount,
             Action threadBody)
         {
+            int core = 1;
             for (int i = 0; i < amount; i++)
             {
+                
                 var thread = threadPool.CreateNewThread(threadBody);
-                threadPool.ProcessingThreadRegistry.Register(thread);
+                threadPool.ProcessingThreadRegistry.Register(new PoolThread(threadBody));
             }
         }
 

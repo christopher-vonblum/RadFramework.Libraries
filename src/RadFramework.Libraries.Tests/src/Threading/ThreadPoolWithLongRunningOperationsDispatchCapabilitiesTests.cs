@@ -52,15 +52,12 @@ namespace RadFramework.Libraries.Threading.Tests
             
             // wait 5 seconds
             Thread.Sleep(10000);
-
-            // calculate the overall thread amount
-            int overallManagedThreadsCount = pool.ProcessingThreadRegistry.Count + pool.LongRunningOperationsRegistry.Count;
-
+            
             // tear down the thread pool
             pool.Dispose();
 
             // validate that all processing threads have stopped
-            processingThreads.Concat(longRunningThreads).All(thread => thread.ThreadState == ThreadState.Stopped);
+            Assert.IsTrue(processingThreads.Concat(longRunningThreads).All(thread => thread.ThreadState == ThreadState.Stopped));
         }
         
         [Test]

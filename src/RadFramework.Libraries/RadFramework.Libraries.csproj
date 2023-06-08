@@ -8,7 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="dep\" />
       <Folder Include="src\Serialization\Json\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="dep\libLinuxThreadAffinityAdapter.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 
 public interface IThreadAffinityApi
 {
-    int GetNativeThreadId();
-    void AssignAffinity(int nativeThreadId, BitMask processorMask);
-    void AssignAllProcessors(int nativeThreadId);
+    ulong GetCurrentThreadId();
+    void AssignAffinity(ulong nativeThreadId, int core);
+    void ResetAffinityAndCleanup(ulong nativeThreadId);
 }

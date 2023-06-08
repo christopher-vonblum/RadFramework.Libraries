@@ -1,19 +1,33 @@
-﻿namespace RadFramework.Libraries.Threading.Internals.ThreadAffinity;
+﻿using System.Runtime.InteropServices;
+
+namespace RadFramework.Libraries.Threading.Internals.ThreadAffinity;
 
 class UnixPthreadsApiAdapter : IThreadAffinityApi
 {
-    public int GetNativeThreadId()
+    public ulong GetCurrentThreadId()
     {
-        throw new NotImplementedException();
+        return Imports.GetCurrentThreadId();
     }
 
-    public void AssignAffinity(int nativeThreadId, BitMask processorMask)
+    public void AssignAffinity(ulong nativeThreadId, int core)
     {
-        throw new NotImplementedException();
+        Imports.AssignAffinity(nativeThreadId, core);
     }
 
-    public void AssignAllProcessors(int nativeThreadId)
+    public void ResetAffinityAndCleanup(ulong nativeThreadId)
     {
-        throw new NotImplementedException();
+        Imports.ResetAffinityAndCleanup(nativeThreadId);
+    }
+
+    private class Imports
+    {
+        [DllImport("libLinuxThreadAffinityAdapter.so")]
+        internal static extern ulong GetCurrentThreadId();
+        
+        [DllImport("libLinuxThreadAffinityAdapter.so")]
+        internal static extern void AssignAffinity(ulong threadId, int core);
+        
+        [DllImport("libLinuxThreadAffinityAdapter.so")]
+        internal static extern void ResetAffinityAndCleanup(ulong threadId);
     }
 }

@@ -77,11 +77,11 @@ namespace RadFramework.Libraries.Threading.Semaphores
                 // release the thread trapped in WaitHere()
                 e.Key.Set();
                 
-                // Increment the relesed counter
+                // Increment the released counter
                 released++;
             }
 
-            // Return the ampount of released threads
+            // Return the amount of released threads
             return released;
         }
 

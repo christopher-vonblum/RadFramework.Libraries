@@ -1,18 +1,20 @@
-﻿namespace RadFramework.Libraries.Threading.Internals.ThreadAffinity;
+﻿using System.Diagnostics;
+
+namespace RadFramework.Libraries.Threading.Internals.ThreadAffinity;
 
 public class WindowsApiAdapter : IThreadAffinityApi
 {
-    public int GetNativeThreadId()
+    public ulong GetCurrentThreadId()
     {
         throw new NotImplementedException();
     }
 
-    public void AssignAffinity(int nativeThreadId, BitMask processorMask)
+    public void AssignAffinity(ulong nativeThreadId, int core)
     {
         throw new NotImplementedException();
     }
 
-    public void AssignAllProcessors(int nativeThreadId)
+    public void ResetAffinityAndCleanup(ulong nativeThreadId)
     {
         throw new NotImplementedException();
     }

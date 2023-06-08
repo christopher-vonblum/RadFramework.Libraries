@@ -2,16 +2,16 @@
 
 public class ThreadAffinityApiNotAvailableAdapter : IThreadAffinityApi
 {
-    public int GetNativeThreadId()
+    public ulong GetCurrentThreadId()
     {
-        return Thread.CurrentThread.ManagedThreadId;
+        return (ulong)Thread.CurrentThread.ManagedThreadId;
     }
 
-    public void AssignAffinity(int nativeThreadId, BitMask processorMask)
+    public void AssignAffinity(ulong nativeThreadId, int core)
     {
     }
 
-    public void AssignAllProcessors(int nativeThreadId)
+    public void ResetAffinityAndCleanup(ulong nativeThreadId)
     {
     }
 }
