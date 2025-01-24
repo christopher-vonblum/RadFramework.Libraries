@@ -5,7 +5,7 @@ namespace RadFramework.Libraries.Serialization.Json.Writer;
 
 public class JsonObjectTreeSerializer
 {
-    private JsonWriter writer = new JsonWriter();
+    private static JsonWriter writer = new JsonWriter();
     
     public string Serialize(object obj)
     {
@@ -24,6 +24,11 @@ public class JsonObjectTreeSerializer
             return writer.WriteArray(a);
         }
         
+        if (obj is IJsonArrayProxyInternal ap)
+        {
+            return writer.WriteArray(ap.Data);
+        }
+        
         if (obj is JsonProperty p)
         {
             return writer.WriteProperty(p);
@@ -34,15 +39,6 @@ public class JsonObjectTreeSerializer
             return writer.WriteObject(proxy.Data);
         }
         
-        if (obj is IJsonArrayProxyInternal proxyArray)
-        {
-            return writer.WriteArray(proxyArray.Data);
-        }
-        
-        throw new SerializationException($"Unable to deserialize object of type {obj.GetType().FullName}");
+        throw new SerializationException($"Unable to serialize object of type {obj.GetType().FullName}");
     }
-
-
-
-
 }

@@ -36,7 +36,7 @@ public class JsonWriter
         
         if (property.Value is string str)
         {
-             json += $"\"{str}\"";
+             json += $"\"{str ?? string.Empty}\"";
         }
         else if (property.Value is JsonArray a)
         {

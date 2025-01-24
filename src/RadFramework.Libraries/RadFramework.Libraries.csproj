@@ -11,7 +11,7 @@
       <Folder Include="dep\" />
       <Folder Include="src\Extensibility\" />
       <Folder Include="src\GenericUi\Console\" />
-      <Folder Include="src\Net\" />
+      <Folder Include="src\Net\Telemetry\" />
       <Folder Include="src\TextTranslation\" />
     </ItemGroup>
 

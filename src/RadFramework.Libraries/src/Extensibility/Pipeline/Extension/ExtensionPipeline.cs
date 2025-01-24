@@ -2,7 +2,7 @@ using RadFramework.Libraries.Ioc;
 
 namespace RadFramework.Libraries.Extensibility.Pipeline.Extension;
 
-public class ExtensionPipeline<TContext> : IPipeline<TContext, TContext>
+public class ExtensionPipeline<TContext>
 {
     private readonly IIocContainer _serviceProvider;
     public LinkedList<IExtensionPipe<TContext>> pipes;
@@ -23,7 +23,7 @@ public class ExtensionPipeline<TContext> : IPipeline<TContext, TContext>
         return (IExtensionPipe<TContext>) _serviceProvider.Activate(def.Type);
     }
 
-    public TContext Process(TContext input)
+    public bool Process(TContext input)
     {
         ExtensionPipeContext pipeContext = new ExtensionPipeContext();
         
@@ -37,6 +37,6 @@ public class ExtensionPipeline<TContext> : IPipeline<TContext, TContext>
             }
         }
 
-        return input;
+        return pipeContext.ShouldReturn;
     }
 }

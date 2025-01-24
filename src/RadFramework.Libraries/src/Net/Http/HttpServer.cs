@@ -1,5 +1,6 @@
 using System.Net.Sockets;
 using RadFramework.Libraries.Net.Socket;
+using RadFramework.Libraries.Serialization.Json.ContractSerialization;
 using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.ThreadPools.Queued;
 
@@ -59,18 +60,44 @@ public class HttpServer : IDisposable
             requestModel.Headers.Add(header.header, header.value);
         }
 
-        using (socketConnection)
-        using (networkStream)
-        using (requestReader)
+        bool upgradingToWebSocket = false;
+        
+        if ((requestModel.Headers.ContainsKey("Upgrade") && requestModel.Headers["Upgrade"] == "websocket")
+            || (requestModel.Headers.ContainsKey("Connection") && requestModel.Headers["Connection"] == "Upgrade"))
         {
-            processRequest(new HttpConnection
+            networkStream.Dispose();
+            requestReader.Dispose();
+            
+            
+        }
+            
+        HttpConnection connection =
+            new HttpConnection
             {
                 Request = requestModel,
                 RequestReader = requestReader,
                 UnderlyingStream = networkStream,
                 UnderlyingSocket = socketConnection
-            });            
+            };
+
+        try
+        {
+            processRequest(connection);
         }
+        catch (Exception e)
+        {
+            connection.ServerContext.Logger.LogError("Error while processing request: \r\n" + JsonContractSerializer.Instance.SerializeToJsonString(typeof(HttpRequest), requestModel) + "\r\n" + e.ToString());
+        }
+        
+        networkStream.Flush();
+        
+        connection.Response.Dispose();
+        
+        requestReader.Dispose();
+        networkStream.Dispose();
+            
+        socketConnection.Close();
+        socketConnection.Dispose();
     }
 
     public void Dispose()

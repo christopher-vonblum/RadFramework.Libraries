@@ -16,4 +16,5 @@ public class HttpServerContext
 
     public ISimpleCache Cache => cache;
     public ILogger Logger => logger;
+    public string NotFoundPage { get; set; } = "wwwroot/404.html";
 }

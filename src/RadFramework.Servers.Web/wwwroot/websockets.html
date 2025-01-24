@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!DOCTYPE html>
+<script>
+    wsToServer = new WebSocket("ws://127.0.0.1/websocket");    
+    
+    ws.onopen = () => {
+        ws.send("Hi server, please send me the score of yesterday's game")
+    }
+
+    ws.onmessage = (event) => {
+        console.log(event);
+    }
+
+    ws.onclose = (event) => {
+        ws = new WebSocket("ws://127.0.0.1/websocket");
+    }
+
+    ws.onerror = () => {
+        ws = new WebSocket("ws://127.0.0.1/websocket");
+    }
+    
+</script>
+</body>
+</html>

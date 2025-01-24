@@ -22,7 +22,17 @@ public class HttpServerWithPipeline : IDisposable
     private void ProcessRequestUsingPipeline(HttpConnection connection)
     {
         connection.ServerContext = ServerContext;
-        httpPipeline.Process(connection);
+        
+        if (!httpPipeline.Process(connection))
+        {
+            connection
+                .Response
+                .Send404(
+                connection
+                    .Response
+                    .GetFileFromCacheOrDisk(
+                        connection.ServerContext.NotFoundPage));
+        }
     }
     
     public void Dispose()

@@ -21,34 +21,39 @@ public class HttpResponse : IDisposable
         
         SendHtmlDocument(document);
         
-        writer.Close();
-        writer.Dispose();
+        writer.Flush();
     }
 
     public void Send404(HttpDocument document = null)
     {
         writer.WriteLine(connection.Request.HttpVersion + " 404 Not Found");
-        writer.WriteLine();
 
         if (document != null)
         {
             SendHtmlDocument(document);
         }
         
-        writer.Close();
-        writer.Dispose();
+        writer.Flush();
     }
     
-    private void SendHtmlDocument(HttpDocument document)
+    public void SendHtmlDocument(HttpDocument document)
     {
         SendHeader("Content-type", $"text/html; charset={document.Encoding.WebName}");
         SendHeader("Content-Length", document.Body.Length.ToString());
         writer.WriteLine();
-        writer.Write(document.GetText());
         writer.Flush();
+        
+        SendFile(document.Body);
     }
     
-    private void SendHeader(string headerName, string headerValue)
+    public void SendFile(byte[] file)
+    {
+        connection.UnderlyingStream.Flush();
+        connection.UnderlyingStream.Write(file);
+        connection.UnderlyingStream.Flush();
+    }
+    
+    public void SendHeader(string headerName, string headerValue)
     {
         writer.WriteLine(headerName + ": " + headerValue);
     }
@@ -69,7 +74,7 @@ public class HttpResponse : IDisposable
             GetFileFromCacheOrDisk(path));
     }
 
-    private HttpDocument GetFileFromCacheOrDisk(string path)
+    public HttpDocument GetFileFromCacheOrDisk(string path)
     {
         return connection.ServerContext.Cache.GetOrSet(
             path, 
@@ -105,6 +110,8 @@ public class HttpResponse : IDisposable
     
     public void Dispose()
     {
-        writer?.Dispose();
+        writer.Flush();
+        writer.Close();
+        writer.Dispose();
     }
 }

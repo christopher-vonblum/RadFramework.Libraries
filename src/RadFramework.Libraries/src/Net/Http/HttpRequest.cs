@@ -10,7 +10,4 @@ public class HttpRequest
     public string UrlPath { get; set; }
     public string QueryString { get; set; }
     public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
-    
-    public Encoding Encoding { get; set; }
-
 }

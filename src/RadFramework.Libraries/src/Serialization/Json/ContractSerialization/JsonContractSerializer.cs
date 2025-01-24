@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using RadFramework.Libraries.Reflection.Caching;
@@ -12,8 +13,6 @@ public class JsonContractSerializer : IContractSerializer
 {
     public static JsonContractSerializer Instance { get; } = new JsonContractSerializer();
     
-    private readonly JsonObjectTreeSerializer objectTreeSerializer;
-    
     public byte[] Serialize(Type type, object model)
     {
         return Encoding.UTF8.GetBytes(SerializeToJsonString(type, model));
@@ -22,7 +21,8 @@ public class JsonContractSerializer : IContractSerializer
     public string SerializeToJsonString(Type type, object model)
     {
         IJsonObjectTreeModel jsonModel = (IJsonObjectTreeModel)CreateJsonObjectForSerialization(type, model);
-        return objectTreeSerializer.Serialize(jsonModel);
+        
+        return new JsonObjectTreeSerializer().Serialize(jsonModel);
     }
 
     public object CreateJsonObjectForSerialization(Type type, object obj)
@@ -37,9 +37,42 @@ public class JsonContractSerializer : IContractSerializer
             return CreateJsonArrayFromEnumerable((IEnumerable)obj);
         }
 
+        if (type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+        {
+            Type[] args = type.GetGenericArguments();
+
+            return CreateJsonObjectFromDictionaryObject(args[0], args[1], obj);
+        }
+
         return CreateJsonObjectFromRuntimeObject(type, obj);
     }
 
+    private object CreateJsonObjectFromDictionaryObject(Type tKey, Type tValue, object dictionary)
+    {
+        IEnumerable dict = ((IEnumerable)dictionary);
+
+        Type kvType = typeof(KeyValuePair<,>).MakeGenericType(tKey, tValue);
+
+        PropertyInfo keyInfo = kvType.GetProperty("Key");
+        PropertyInfo valueInfo = kvType.GetProperty("Value");
+
+        Dictionary<string, object> properties = new Dictionary<string, object>();
+        
+        foreach (object kv in dict)
+        {
+            properties.
+                Add(
+                    keyInfo
+                        .GetValue(kv)
+                        .ToString(), 
+                    CreateJsonObjectForSerialization(
+                        valueInfo.PropertyType, 
+                        valueInfo.GetValue(kv)));
+        }
+        
+        return new JsonObject(properties);
+    }
+    
     private object CreateJsonObjectFromRuntimeObject(Type objectType, object obj)
     {
         CachedType t = objectType ?? obj.GetType();

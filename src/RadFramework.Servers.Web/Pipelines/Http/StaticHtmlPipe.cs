@@ -6,16 +6,18 @@ namespace RadFramework.Servers.Web.Pipelines.Http;
 
 public class StaticHtmlPipe : IHttpPipe
 {
-    private readonly ISimpleCache cache;
     private string WWWRootPath = "wwwroot";
-
-    public StaticHtmlPipe(ISimpleCache cache)
+    
+    private string[] htmlExtensions = new[]
     {
-        this.cache = cache;
-    }
+        "htm",
+        "html"
+    };
     
     public void Process(HttpConnection connection, ExtensionPipeContext pipeContext)
     {
+        string urlPath = connection.Request.UrlPath;
+        
         if (connection.Request.UrlPath == "/")
         {
             connection.Response.TryServeStaticHtmlFile(WWWRootPath + "/index.html");
@@ -23,8 +25,25 @@ public class StaticHtmlPipe : IHttpPipe
             return;
         }
         
-        connection.Response.TryServeStaticHtmlFile(WWWRootPath + connection.Request.UrlPath);
-        pipeContext.Return();
-        return;
+        if (urlPath.EndsWith('/'))
+        {
+            urlPath = urlPath.TrimEnd('/');
+        }
+
+        string[] segments = urlPath.Split('/');
+
+        string fileName = segments.Last();
+
+        if (fileName.Contains('.'))
+        {
+            string fileExtension = fileName.Substring(fileName.LastIndexOf('.') + 1);
+
+            if (htmlExtensions.Contains(fileExtension))
+            {
+                connection.Response.TryServeStaticHtmlFile(WWWRootPath + connection.Request.UrlPath);
+                pipeContext.Return();
+                return;             
+            }
+        }
     }
 }

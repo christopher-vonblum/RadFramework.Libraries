@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using RadFramework.Libraries.Collections;
 
 namespace RadFramework.Libraries.Threading.Semaphores
@@ -15,8 +16,8 @@ namespace RadFramework.Libraries.Threading.Semaphores
         /// <summary>
         /// Maps thread id to wait event
         /// </summary>
-        private Dictionary<AutoResetEvent, AutoResetEvent> eventsInTrapCollection
-            = new Dictionary<AutoResetEvent, AutoResetEvent>();
+        private ConcurrentDictionary<AutoResetEvent, AutoResetEvent> eventsInTrapCollection
+            = new ConcurrentDictionary<AutoResetEvent, AutoResetEvent>();
 
         /// <summary>
         /// Constructor.
@@ -40,13 +41,13 @@ namespace RadFramework.Libraries.Threading.Semaphores
             AutoResetEvent waitEvent = _waitEventPoolWithFactory.Reserve();
             
             // store the AutoResetEvent so that it can be a candidate for the Release(int) method
-            eventsInTrapCollection[waitEvent] = waitEvent;
-            
+            eventsInTrapCollection.TryAdd(waitEvent, waitEvent);
+
             // trap the caller thread here
             waitEvent.WaitOne();
             
             // remove the event because a Release(int) call caused the trap to end
-            eventsInTrapCollection.Remove(waitEvent);
+            eventsInTrapCollection.TryRemove(waitEvent, out var value);
             
             // tell the object pool to adopt the AutoResetEvent again
             _waitEventPoolWithFactory.Release(waitEvent);
