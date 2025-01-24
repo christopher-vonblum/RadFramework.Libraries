@@ -5,12 +5,12 @@ namespace RadFramework.Libraries.Extensibility.Pipeline.Synchronous
     public class SynchronousPipeline<TIn, TOut> : IPipeline<TIn, TOut>
     {
         private readonly IIocContainer _serviceProvider;
-        public LinkedList<ISynchronousPipe> definitions;
+        public LinkedList<ISynchronousPipe> pipes;
 
-        public SynchronousPipeline(PipelineDefinition<TIn, TOut> definition, IIocContainer serviceProvider)
+        public SynchronousPipeline(PipelineDefinition definition, IIocContainer serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            definitions = new LinkedList<ISynchronousPipe>(definition.Definitions.Select(CreatePipe));
+            pipes = new LinkedList<ISynchronousPipe>(definition.Definitions.Select(CreatePipe));
         }
         
         public SynchronousPipeline(IEnumerable<ISynchronousPipe> definitions)
@@ -27,7 +27,7 @@ namespace RadFramework.Libraries.Extensibility.Pipeline.Synchronous
         {
             object result = input;
             
-            foreach (var pipe in definitions)
+            foreach (var pipe in pipes)
             {
                 result = pipe.Process(result);
             }

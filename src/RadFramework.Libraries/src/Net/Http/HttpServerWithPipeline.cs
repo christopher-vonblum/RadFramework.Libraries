@@ -1,29 +1,23 @@
 using RadFramework.Libraries.Extensibility.Pipeline;
+using RadFramework.Libraries.Extensibility.Pipeline.Synchronous;
+using RadFramework.Libraries.Ioc;
 
 namespace RadFramework.Libraries.Net.Http;
 
 public class HttpServerWithPipeline : IDisposable
 {
-    private readonly IPipeline<HttpConnection, byte[]> httpPipeline;
+    private readonly ExtensionPipeline<HttpConnection> httpPipeline;
     private HttpServer server;
-    
-    public HttpServerWithPipeline(int port, IPipeline<HttpConnection, byte[]> httpPipeline)
+
+    public HttpServerWithPipeline(int port, PipelineDefinition httpPipelineDefinition, IocContainer iocContainer)
     {
-        this.httpPipeline = httpPipeline;
+        this.httpPipeline = new ExtensionPipeline<HttpConnection>(httpPipelineDefinition, iocContainer);
         server = new HttpServer(port, ProcessRequestUsingPipeline);
     }
-    
+
     private void ProcessRequestUsingPipeline(HttpConnection connection)
     {
-        byte[] response = httpPipeline.Process(connection);
-
-        connection.ResponseStream.Write(response);
-
-        connection.ResponseStream.Flush();
-        connection.ResponseStream.Dispose();
-
-        connection.UnderlyingSocket.Close();
-        connection.UnderlyingSocket.Dispose();
+        httpPipeline.Process(connection);
     }
     
     public void Dispose()

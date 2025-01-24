@@ -1,11 +1,12 @@
 using RadFramework.Libraries.Extensibility.Pipeline.Synchronous;
 using RadFramework.Libraries.Net.Http;
+using RadFramework.Servers.Web.Pipelines;
 
 namespace RadFramework.Servers.Web.Pipes;
 
-public class StaticIconPipe : SynchronousPipeBase<HttpConnection, byte[]>
+public class StaticIconPipe : IHttpPipe
 {
-    public override byte[] Process(HttpConnection input)
+    public void Process(HttpConnection input)
     {
         throw new NotImplementedException();
     }

@@ -62,7 +62,7 @@ public class HttpServer : IDisposable
         {
             Request = requestModel,
             RequestReader = requestReader,
-            ResponseStream = networkStream,
+            UnderlyingStream = networkStream,
             UnderlyingSocket = socketConnection
         });
     }

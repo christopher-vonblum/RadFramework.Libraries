@@ -5,7 +5,7 @@ namespace RadFramework.Libraries.Extensibility.Pipeline.Asynchronous
         private readonly IServiceProvider _serviceProvider;
         public LinkedList<IAsynchronousPipe> definitions;
         
-        public IAsynchronousPipeline(PipelineDefinition<TIn, TOut> definition, IServiceProvider serviceProvider)
+        public IAsynchronousPipeline(PipelineDefinition definition, IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             definitions = new LinkedList<IAsynchronousPipe>(definition.Definitions.Select(CreatePipe));
@@ -17,13 +17,13 @@ namespace RadFramework.Libraries.Extensibility.Pipeline.Asynchronous
 
         public TOut Process(TIn input)
         {
-            PipeContext pipelineContext = new PipeContext();
+            AsynchronousPipeContext pipelineContext = new AsynchronousPipeContext();
             
-            List<PipeContext> contexts = new List<PipeContext>();
+            List<AsynchronousPipeContext> contexts = new List<AsynchronousPipeContext>();
             
             Thread first = new Thread(() =>
             {
-                PipeContext p = new PipeContext();
+                AsynchronousPipeContext p = new AsynchronousPipeContext();
                 if (definitions.First.Next != null)
                 {
                     CreateThread(p, definitions.First.Next, pipelineContext, contexts);
@@ -52,18 +52,18 @@ namespace RadFramework.Libraries.Extensibility.Pipeline.Asynchronous
             return (TOut)pipelineContext.ReturnValue;
         }
 
-        private static void Return(PipeContext pipelineContext, object o)
+        private static void Return(AsynchronousPipeContext pipelineContext, object o)
         {
             pipelineContext.ReturnValue = o;
             pipelineContext.PreviousReturnedValue.Set();
         }
 
-        private void CreateThread(PipeContext previousContext, LinkedListNode<IAsynchronousPipe> current,
-            PipeContext pipelineContext, List<PipeContext> contexts)
+        private void CreateThread(AsynchronousPipeContext previousContext, LinkedListNode<IAsynchronousPipe> current,
+            AsynchronousPipeContext pipelineContext, List<AsynchronousPipeContext> contexts)
         {
             Thread pipeThread = new Thread(() =>
                 {
-                    PipeContext currentContext = new PipeContext();
+                    AsynchronousPipeContext currentContext = new AsynchronousPipeContext();
                     
                     currentContext.Thread = Thread.CurrentThread;
                     
@@ -98,13 +98,5 @@ namespace RadFramework.Libraries.Extensibility.Pipeline.Asynchronous
             
             pipeThread.Start();
         }
-    }
-
-    class PipeContext
-    {
-        public ManualResetEvent PreviousReturnedValue { get; } = new ManualResetEvent(false);
-        public object ReturnValue { get; set; }
-        public bool WaitingForInput { get; set; } = true;
-        public Thread Thread { get; set; }
     }
 }

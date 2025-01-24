@@ -18,6 +18,14 @@
       <None Update="wwwroot\favicon.ico">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Config\HttpPipeline.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Pipelines\301\" />
+      <Folder Include="Pipelines\404\" />
     </ItemGroup>
 
 </Project>
