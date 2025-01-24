@@ -4,21 +4,30 @@ namespace RadFramework.Libraries.Threading;
 
 public class PoolThread : IDisposable
 {
-    private readonly Action _threadStart;
-    private readonly int _core;
+    private static List<PoolThread> GlobalPoolThreadRegistry = new List<PoolThread>();
+
+    internal static PoolThread GetPoolThread(Thread thread)
+    {
+        return GlobalPoolThreadRegistry.Single(t => t.ThreadingThread == thread);
+    }
+    
+    public Action ThreadBody { get; private set; }
+    
     private ManualResetEventSlim onThreadStart = new ManualResetEventSlim(false);
     
     public Thread ThreadingThread { get; }
     
     public ulong ThreadId { get; private set; }
+    public int AssignedCore { get; set; }
 
-    public PoolThread(Action threadStart, int core, ThreadPriority threadPriority, string threadDescription)
+    public PoolThread(Action threadBody, int core, ThreadPriority threadPriority, string threadDescription)
     {
-        _threadStart = threadStart;
-        _core = core;
+        ThreadBody = threadBody;
+        AssignedCore = core;
         ThreadingThread = new Thread(ThreadStart);
         ThreadingThread.Priority = threadPriority;
         ThreadingThread.Name = threadDescription;
+        GlobalPoolThreadRegistry.Add(this);
         ThreadingThread.Start();
     }
 
@@ -26,11 +35,11 @@ public class PoolThread : IDisposable
     {
         ThreadId = ThreadAffinityApi.GetCurrentThreadId();
         
-        ThreadAffinityApi.AssignAffinity(ThreadId, _core);
+        ThreadAffinityApi.AssignAffinity(ThreadId, AssignedCore);
 
         onThreadStart.Wait();
 
-        _threadStart();
+        ThreadBody();
     }
 
     public void Start()
@@ -41,5 +50,6 @@ public class PoolThread : IDisposable
     public void Dispose()
     {
         onThreadStart.Dispose();
+        GlobalPoolThreadRegistry.Remove(this);
     }
 }

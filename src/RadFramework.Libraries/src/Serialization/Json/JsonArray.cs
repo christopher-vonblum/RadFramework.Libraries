@@ -1,38 +1,41 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
+using RadFramework.Libraries.Serialization.Json.Parser;
 
-namespace JsonParser
+namespace RadFramework.Libraries.Serialization.Json
 {
-    public class JsonArray : IEnumerable<object>
+    public class JsonArray : IEnumerable<object>, IJsonObjectTreeModel
     {
-        private Lazy<List<object>> entries;
+        private List<object> entries;
 
         public JsonArray(string jsonArray)
         {
-            entries = new Lazy<List<object>>(() => ParseArray(jsonArray));
+            entries = new List<object>(ParseArray(jsonArray));
+        }
+        public JsonArray(List<object> entries)
+        {
+            this.entries = entries;
         }
 
         public object this[int index]
         {
             get
             {
-                return entries.Value[index];
+                return entries[index];
             }
             set
             {
-                entries.Value[index] = value;
+                entries[index] = value;
             }
         }
 
         public IEnumerator<object> GetEnumerator()
         {
-            return entries.Value.GetEnumerator();
+            return entries.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable) entries.Value).GetEnumerator();
+            return ((IEnumerable) entries).GetEnumerator();
         }
         
         public static List<object> ParseArray(string jsonArray)

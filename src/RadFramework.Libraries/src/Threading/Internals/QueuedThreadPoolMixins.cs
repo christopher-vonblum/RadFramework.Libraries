@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace RadFramework.Libraries.Threading.Internals
 {
     /// <summary>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using RadFramework.Libraries.Threading.Internals;
+﻿using RadFramework.Libraries.Threading.Internals;
 
 namespace RadFramework.Libraries.Threading.ThreadPools.Simple
 {

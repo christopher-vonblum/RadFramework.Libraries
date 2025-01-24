@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RadFramework.Libraries.Ioc.Registrations
+﻿namespace RadFramework.Libraries.Ioc.Registrations
 {
     public class SingletonInstanceRegistration : RegistrationBase
     {

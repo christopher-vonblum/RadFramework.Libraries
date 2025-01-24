@@ -1,6 +1,4 @@
-using System;
-
-namespace JsonParser
+namespace RadFramework.Libraries.Serialization.Json.Parser
 {
     public class ParserBugException : Exception
     {

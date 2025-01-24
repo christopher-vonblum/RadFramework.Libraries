@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using RadFramework.Libraries.Threading.Internals;
+﻿using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.ObjectRegistries;
 
 namespace RadFramework.Libraries.Threading.ThreadPools.Queued
@@ -17,7 +15,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         /// <summary>
         /// Gets invoked when a thread is identified as a long running operation
         /// </summary>
-        public Action<Thread> OnShiftedToLongRunningOperationsPool { get; }
+        public Action<PoolThread> OnShiftedToLongRunningOperationsPool { get; }
         
         /// <summary>
         /// Defines the timeout in milliseconds after a thread goes to the long running operations pool.
@@ -37,8 +35,8 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         /// <summary>
         /// Threads that are long running get stored here.
         /// </summary>
-        public ObjectReferenceRegistry<Thread> LongRunningOperationsRegistry { get; } =
-            new ObjectReferenceRegistry<Thread>();
+        public ObjectReferenceRegistry<PoolThread> LongRunningOperationsRegistry { get; } =
+            new ObjectReferenceRegistry<PoolThread>();
  
         /// <summary>
         /// The priority to assign when a thread gets moved to the long running operations pool.
@@ -64,7 +62,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
             int dispatchLongRunningThreadTimeout,
             ThreadPriority longRunningOperationThreadsPriority,
             string threadDescription = null,
-            Action<Thread> onShiftedToLongRunningOperationsPool = null, 
+            Action<PoolThread> onShiftedToLongRunningOperationsPool = null, 
             int longRunningOperationLimit = 0,
             int longRunningOperationCancellationTimeout = 0) 
             : base(processingThreadAmount, processingThreadPriority, processingMethod, threadDescription)
@@ -83,8 +81,9 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
             {
                 if (Queue.TryDequeue(out TQueueTask task))
                 {
-                    Thread newThread = this.CreateNewThread(
-                        () => ProcessWorkloadUnitInternal(task));
+                    PoolThread newThread = this.CreateNewThread(
+                        () => ProcessWorkloadUnitInternal(task),
+                        PoolThread.GetPoolThread(Thread.CurrentThread).AssignedCore);
                     
                     // start processing the unit of work.
                     newThread.Start();

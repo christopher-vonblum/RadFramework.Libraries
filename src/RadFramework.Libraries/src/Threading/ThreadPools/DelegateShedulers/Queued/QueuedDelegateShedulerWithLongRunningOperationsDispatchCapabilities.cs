@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using RadFramework.Libraries.Threading.Internals;
+﻿using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.ThreadPools.Queued;
 
 namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
@@ -14,7 +11,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
             int dispatchLongRunningThreadTimeout, 
             ThreadPriority longRunningOperationThreadsPriority, 
             string threadDescription = null, 
-            Action<Thread> onShiftedToLongRunningOperationsPool = null, 
+            Action<PoolThread> onShiftedToLongRunningOperationsPool = null, 
             int longRunningOperationLimit = 0, 
             int longRunningOperationCancellationTimeout = 0) 
             : base(

@@ -9,7 +9,10 @@
 
     <ItemGroup>
       <Folder Include="dep\" />
-      <Folder Include="src\Serialization\Json\" />
+      <Folder Include="src\Extensibility\" />
+      <Folder Include="src\GenericUi\Console\" />
+      <Folder Include="src\Net\" />
+      <Folder Include="src\TextTranslation\" />
     </ItemGroup>
 
     <ItemGroup>

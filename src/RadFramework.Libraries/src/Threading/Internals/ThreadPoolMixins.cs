@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-
 namespace RadFramework.Libraries.Threading.Internals
 {
     public static class ThreadPoolMixins
@@ -11,15 +8,17 @@ namespace RadFramework.Libraries.Threading.Internals
         /// <param name="amount">Amount of Threads to create.</param>
         public static void CreateThreads(
             this IThreadPoolMixinsConsumer threadPool,
-            int amount,
-            Action threadBody)
+            int amountPerCore,
+            Action threadBody,
+            ThreadPriority threadPriority,
+            string poolDescription)
         {
-            int core = 1;
-            for (int i = 0; i < amount; i++)
+            for (int core = 0; core < Environment.ProcessorCount; core++)
             {
-                
-                var thread = threadPool.CreateNewThread(threadBody);
-                threadPool.ProcessingThreadRegistry.Register(new PoolThread(threadBody));
+                for (int i = 0; i < amountPerCore; i++)
+                {
+                    threadPool.ProcessingThreadRegistry.Register(threadPool.CreateNewThread(threadBody, core));
+                }                
             }
         }
 
@@ -27,14 +26,12 @@ namespace RadFramework.Libraries.Threading.Internals
         /// Creates a loop thread and registeres it in the ProcessingThreads collection.
         /// </summary>
         /// <returns>The created thread.</returns>
-        public static Thread CreateNewThread(
+        public static PoolThread CreateNewThread(
             this IThreadPoolMixinsConsumer threadPool,
-            Action processingMethodDelegate)
+            Action processingMethodDelegate,
+            int core)
         {
-            Thread newThread = new Thread(s => processingMethodDelegate());
-            newThread.Priority = threadPool.ProcessingThreadPriority;
-            newThread.Name = threadPool.ThreadDescription;
-            return newThread;
+            return new PoolThread(processingMethodDelegate, core, threadPool.ProcessingThreadPriority, threadPool.ThreadDescription);
         }
 
         /// <summary>

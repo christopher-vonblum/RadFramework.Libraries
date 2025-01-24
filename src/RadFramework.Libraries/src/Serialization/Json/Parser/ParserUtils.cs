@@ -1,7 +1,6 @@
-using System;
 using System.Text;
 
-namespace JsonParser
+namespace RadFramework.Libraries.Serialization.Json.Parser
 {
     public static class ParserUtils
     {

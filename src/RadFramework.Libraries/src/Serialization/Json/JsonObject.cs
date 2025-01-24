@@ -1,52 +1,50 @@
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+using RadFramework.Libraries.Serialization.Json.Parser;
 
-namespace JsonParser
+namespace RadFramework.Libraries.Serialization.Json
 {
-    public class JsonObject
+    public class JsonObject : IJsonObjectTreeModel
     {
         public IEnumerable<JsonProperty> Properties
         {
             get
             {
-                return _properties.Value.Select(p => new JsonProperty
+                return _properties.Select(p => new JsonProperty
                 {
                     Name = p.Key,
-                    _Value = _properties.Value[p.Key]
+                    _Value = _properties[p.Key]
                 });
             }
         }
         
-        private Lazy<IDictionary<string, Lazy<object>>> _properties;
+        private IDictionary<string, object> _properties;
 
         public object this[string property]
         {
             get
             {
-                return _properties.Value[property].Value;
+                return _properties[property];
             }
             set
             {
-                _properties.Value[property].Value = value;
+                _properties[property] = value;
             }
         }
 
-        public JsonObject()
+        public JsonObject(IDictionary<string, object> properties)
         {
+            _properties = properties;
         }
         
         public JsonObject(string json)
         {
-            _properties = new Lazy<IDictionary<string, Lazy<object>>>(() => ParseObject(json));
+            _properties = ParseObject(json);
         }
         
-        public static Dictionary<string, Lazy<object>> ParseObject(string json)
+        public static Dictionary<string, object> ParseObject(string json)
         {
             int nesting = 0;
 
-            Dictionary<string, Lazy<object>> objectProperties = new Dictionary<string, Lazy<object>>();
+            Dictionary<string, object> objectProperties = new Dictionary<string, object>();
             
             JsonParserCursor cursor = new JsonParserCursor(json, 0);
 
@@ -81,7 +79,7 @@ namespace JsonParser
             return objectProperties;
         }
 
-        private static Tuple<string, Lazy<object>> ParseJsonProperty(JsonParserCursor cursor)
+        private static Tuple<string, object> ParseJsonProperty(JsonParserCursor cursor)
         {
             string propertyName = ParsePropertyName(cursor);
 
@@ -96,7 +94,7 @@ namespace JsonParser
             
             var type = ParserUtils.DetermineType(cursor.CurrentChar);
 
-            Lazy<object> value;
+            object value;
             
             if (type == JsonTypes.String)
             {
@@ -106,18 +104,18 @@ namespace JsonParser
                 // skip everything until we reach the end of the string ignore escaped "
                 string str = ParserUtils.ReadUntilChars(cursor, new[] {'"'});
                 
-                value = new Lazy<object>(str);
+                value = str;
             }
             else if(type == JsonTypes.Object)
             {
                 string json = cursor.CurrentJson;
-                value = new Lazy<object>(() => new JsonObject(json));
+                value = new JsonObject(json);
                 cursor.SkipObjectOrArray();
             }
             else if(type == JsonTypes.Array)
             {
                 string json = cursor.CurrentJson;
-                value = new Lazy<object>(() => new JsonArray(json));
+                value = new JsonArray(json);
                 cursor.SkipObjectOrArray();
             }
             else
@@ -125,7 +123,7 @@ namespace JsonParser
                 throw new NotImplementedException();
             }
             
-            return new Tuple<string, Lazy<object>>(propertyName, value);
+            return new Tuple<string, object>(propertyName, value);
         }
 
         private static string ParsePropertyName(JsonParserCursor cursor)

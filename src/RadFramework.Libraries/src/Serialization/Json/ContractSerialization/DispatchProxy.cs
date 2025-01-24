@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 using RadFramework.Libraries.Reflection.Caching;
 
-namespace JsonParser
+namespace RadFramework.Libraries.Serialization.Json.Proxy
 {
     public class DispatchProxy
     {

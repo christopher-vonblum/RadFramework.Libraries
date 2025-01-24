@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using System.Text;
 
-namespace JsonParser
+namespace RadFramework.Libraries.Serialization.Json.Parser
 {
     public class JsonParserCursor
     {

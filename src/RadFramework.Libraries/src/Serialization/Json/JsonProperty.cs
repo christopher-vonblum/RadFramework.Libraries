@@ -1,6 +1,6 @@
-namespace JsonParser
+namespace RadFramework.Libraries.Serialization.Json
 {
-    public class JsonProperty
+    public class JsonProperty : IJsonObjectTreeModel
     {
         public string Name { get; set; }
 
@@ -8,19 +8,19 @@ namespace JsonParser
         {
             get
             {
-                return _Value.Value;
+                return _Value;
             }
             set
             {
-                _Value.Value = value;
+                _Value = value;
             }
         }
 
-        internal Lazy<object> _Value;
+        internal object _Value;
 
         public JsonProperty()
         {
-            _Value = new Lazy<object>(null);
+            _Value = null;
         }
     }
 }

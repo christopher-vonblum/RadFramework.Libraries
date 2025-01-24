@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using RadFramework.Libraries.Threading.Internals.ThreadAffinity;
 
 namespace RadFramework.Libraries.Threading.Tests

@@ -1,4 +1,4 @@
-namespace JsonParser
+namespace RadFramework.Libraries.Serialization.Json
 {
     public enum JsonTypes
     {

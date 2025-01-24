@@ -1,5 +1,3 @@
-using System;
-
 namespace RadFramework.Libraries.Reflection.Caching
 {
     public class CachedType : CachedMetadataBase<Type>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace RadFramework.Libraries.Threading.ThreadPools.Queued
+﻿namespace RadFramework.Libraries.Threading.ThreadPools.Queued
 {
     /// <summary>
     /// Abstraction for everything that queues delegates as workload.

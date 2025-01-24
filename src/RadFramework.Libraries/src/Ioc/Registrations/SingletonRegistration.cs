@@ -1,4 +1,3 @@
-using System;
 using RadFramework.Libraries.Ioc.Factory;
 using RadFramework.Libraries.Reflection.Caching;
 

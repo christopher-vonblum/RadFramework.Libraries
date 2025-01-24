@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using RadFramework.Libraries.Threading;
 
 namespace RadFramework.Libraries.Telemetry
 {

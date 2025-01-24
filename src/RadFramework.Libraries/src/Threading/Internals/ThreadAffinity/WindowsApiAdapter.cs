@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace RadFramework.Libraries.Threading.Internals.ThreadAffinity;
+﻿namespace RadFramework.Libraries.Threading.Internals.ThreadAffinity;
 
 public class WindowsApiAdapter : IThreadAffinityApi
 {

@@ -1,5 +1,3 @@
-using System;
-
 namespace RadFramework.Libraries.Ioc.Registrations
 {
     public class Lazy<T>

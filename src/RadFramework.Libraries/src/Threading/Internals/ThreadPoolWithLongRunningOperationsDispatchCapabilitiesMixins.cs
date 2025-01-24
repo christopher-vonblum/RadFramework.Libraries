@@ -1,13 +1,10 @@
-using System;
-using System.Threading;
-
 namespace RadFramework.Libraries.Threading.Internals
 {
     public static class ThreadPoolWithLongRunningOperationsDispatchCapabilitiesMixins
     {
         public static void AwaitThreadRunningPotentialLongRunningOperationAndReplaceThreadInPool(
             this IThreadPoolWithLongRunningOperationsDispatchCapabilitiesMixinsConsumer threadPool,
-            Thread potentialLongRunningThread,
+            PoolThread potentialLongRunningThread,
             Action processingMethodDelegate)
         {
             // start the thread
@@ -15,12 +12,12 @@ namespace RadFramework.Libraries.Threading.Internals
                 
             // TODO: timer vs Join(ms)
             // wait until the dispatch timeout is reached in case its long running
-            potentialLongRunningThread.Join(threadPool.LongRunningThreadDispatchTimeout);
+            potentialLongRunningThread.ThreadingThread.Join(threadPool.LongRunningThreadDispatchTimeout);
                 
             // if processing thread is long running it from the worker thread pool
             // and try to remove it from the pool to turn it a long running operation
-            if (potentialLongRunningThread.ThreadState == ThreadState.Running 
-             && threadPool.TryDispatchLongRunningOperationThread(Thread.CurrentThread, processingMethodDelegate))
+            if (potentialLongRunningThread.ThreadingThread.ThreadState == ThreadState.Running 
+             && threadPool.TryDispatchLongRunningOperationThread(PoolThread.GetPoolThread(Thread.CurrentThread), processingMethodDelegate))
             {
                 // register the long running thread
                 threadPool.LongRunningOperationsRegistry.Register(potentialLongRunningThread);
@@ -29,7 +26,7 @@ namespace RadFramework.Libraries.Threading.Internals
                 threadPool.OnShiftedToLongRunningOperationsPool?.Invoke(potentialLongRunningThread);
 
                 // wait for the thread to join
-                potentialLongRunningThread.Join();
+                potentialLongRunningThread.ThreadingThread.Join();
 
                 // Remove the thread from long running operations if present
                 threadPool.LongRunningOperationsRegistry.Unregister(potentialLongRunningThread);
@@ -43,12 +40,12 @@ namespace RadFramework.Libraries.Threading.Internals
         /// <returns>True if enough slots for long running operations are available</returns>
         public static bool TryDispatchLongRunningOperationThread(
             this IThreadPoolWithLongRunningOperationsDispatchCapabilitiesMixinsConsumer threadPool,
-            Thread thread,
+            PoolThread thread,
             Action processingMethodDelegate)
         {
             if (threadPool.LongRunningOperationsRegistry.Count < threadPool.LongRunningOperationLimit)
             {
-                threadPool.MoveToLongRunningOperationThreadPoolAndCreateReplacementThread(thread, processingMethodDelegate);
+                threadPool.MoveToLongRunningOperationThreadPoolAndCreateReplacementThread(thread);
                 return true;
             }
 
@@ -57,8 +54,7 @@ namespace RadFramework.Libraries.Threading.Internals
         
         public static void MoveToLongRunningOperationThreadPoolAndCreateReplacementThread(
             this IThreadPoolWithLongRunningOperationsDispatchCapabilitiesMixinsConsumer threadPool,
-            Thread longRunningThread,
-            Action processingMethodDelegate)
+            PoolThread longRunningThread)
         {
             lock (threadPool.LongRunningOperationsRegistry)
             lock (threadPool.ProcessingThreadRegistry)
@@ -67,15 +63,12 @@ namespace RadFramework.Libraries.Threading.Internals
                 if (threadPool.LongRunningOperationsRegistry.Unregister(longRunningThread))
                 {
                     // create, start and register a new worker thread as a replacement
-                    Thread newPoolThread = threadPool.CreateNewThread(processingMethodDelegate);
+                    PoolThread newPoolThread = threadPool.CreateNewThread(longRunningThread.ThreadBody, longRunningThread.AssignedCore);
                     
                     threadPool.ProcessingThreadRegistry.Register(newPoolThread);
 
                     // register long running operation
                     threadPool.LongRunningOperationsRegistry.Register(longRunningThread);
-
-                    // assign the thread priority for long running operations
-                    longRunningThread.Priority = threadPool.LongRunningOperationThreadsPriority;
                 }
             }
         }

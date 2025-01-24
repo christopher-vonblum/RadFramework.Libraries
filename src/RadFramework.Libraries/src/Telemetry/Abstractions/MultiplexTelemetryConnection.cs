@@ -1,7 +1,5 @@
 using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.ObjectPools;
-using RadFramework.Libraries.Threading.ObjectRegistries;
-using RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued;
 using RadFramework.Libraries.Threading.ThreadPools.Queued;
 using RadFramework.Libraries.Threading.ThreadPools.Simple;
 

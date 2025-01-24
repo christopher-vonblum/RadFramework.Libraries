@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace RadFramework.Libraries.Ioc
 {
     public interface IContainer : IServiceProvider

@@ -1,6 +1,3 @@
-using System;
-using System.Text.RegularExpressions;
-
 namespace RadFramework.Libraries.Caching
 {
     public interface ISimpleCache

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-
-namespace RadFramework.Libraries.Threading.Timers
+﻿namespace RadFramework.Libraries.Threading.Timers
 {
     public class JobTimer : IDisposable
     {

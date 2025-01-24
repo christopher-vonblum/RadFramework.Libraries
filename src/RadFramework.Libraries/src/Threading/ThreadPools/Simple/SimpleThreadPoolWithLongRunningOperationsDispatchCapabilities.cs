@@ -1,5 +1,3 @@
-using System;
-using System.Threading;
 using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.ObjectRegistries;
 
@@ -20,8 +18,8 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Simple
         /// <summary>
         /// Threads that are long running get stored here.
         /// </summary>
-        public ObjectReferenceRegistry<Thread> LongRunningOperationsRegistry { get; } =
-            new ObjectReferenceRegistry<Thread>();
+        public ObjectReferenceRegistry<PoolThread> LongRunningOperationsRegistry { get; } =
+            new ObjectReferenceRegistry<PoolThread>();
 
         /// <summary>
         /// The priority that gets assigned to a thread when leaving the pool as a long running operation.
@@ -31,7 +29,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Simple
         /// <summary>
         /// Gets called when a pool thread turns an long running operation.
         /// </summary>
-        public Action<Thread> OnShiftedToLongRunningOperationsPool { get; }
+        public Action<PoolThread> OnShiftedToLongRunningOperationsPool { get; }
         
         /// <summary>
         /// Limit of long running operations at the same time.
@@ -62,7 +60,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Simple
             int longRunningThreadDispatchTimeout,
             ThreadPriority longRunningOperationThreadsPriority,
             string threadDescription = null,
-            Action<Thread> onShiftedToLongRunningOperationsPool = null, 
+            Action<PoolThread> onShiftedToLongRunningOperationsPool = null, 
             int longRunningOperationLimit = 0,
             int longRunningOperationCancellationTimeout = 0) 
             : base(processingThreadAmount, processingThreadPriority, processingMethod, threadDescription)
@@ -77,11 +75,9 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Simple
         
         public override void ProcessWorkloadUnit()
         {
-            // create a thread that hosts the processing delegate
-            var thread = new Thread(o => ProcessWorkloadDelegate());
-            
-            thread.Priority = ProcessingThreadPriority;
-            thread.Name = ThreadDescription;
+            PoolThread thread = this.CreateNewThread(
+                ProcessWorkloadDelegate, 
+                PoolThread.GetPoolThread(Thread.CurrentThread).AssignedCore);
             
             this.AwaitThreadRunningPotentialLongRunningOperationAndReplaceThreadInPool(thread, this.ProcessingLoop);
         }

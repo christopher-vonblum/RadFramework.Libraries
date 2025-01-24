@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using RadFramework.Libraries.Telemetry.Encryption;
-using RadFramework.Libraries.Threading;
 using Tests;
 
 namespace RadFramework.Libraries.Telemetry

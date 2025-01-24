@@ -1,6 +1,4 @@
-using System;
-
-namespace JsonParser
+namespace RadFramework.Libraries.DataTypes
 {
     public class Lazy<T>
     {

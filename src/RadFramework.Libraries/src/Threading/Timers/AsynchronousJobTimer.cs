@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-
 namespace RadFramework.Libraries.Threading.Timers
 {
     public class AsynchronousJobTimer : JobTimer

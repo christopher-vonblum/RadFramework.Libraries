@@ -1,12 +1,11 @@
-using System;
 using System.Collections;
 using System.Reflection;
 
-namespace JsonParser
+namespace RadFramework.Libraries.Serialization.Json.Proxy
 {
-    public class ObjectProxy : System.Reflection.DispatchProxy
+    public class JsonObjectProxy : System.Reflection.DispatchProxy
     {
-        internal JsonObject _o;
+        internal JsonObject Data;
         
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
@@ -14,12 +13,12 @@ namespace JsonParser
 
             if (methodName.StartsWith("get_") )
             {
-                object value = _o[methodName.Substring(4)];
+                object value = Data[methodName.Substring(4)];
 
                 if (value is JsonObject o)
                 {
-                    ObjectProxy proxy = (ObjectProxy)DispatchProxy.Create(targetMethod.ReturnType, typeof(ObjectProxy));
-                    proxy._o = o;
+                    JsonObjectProxy proxy = (JsonObjectProxy)DispatchProxy.Create(targetMethod.ReturnType, typeof(JsonObjectProxy));
+                    proxy.Data = o;
                     return proxy;
                 }
                 else if(value is JsonArray a)
@@ -37,7 +36,7 @@ namespace JsonParser
                 string key = methodName.Substring(4);
                 object @value = args[0];
                 
-                _o[key] = @value;
+                Data[key] = @value;
 
                 return null;
             }

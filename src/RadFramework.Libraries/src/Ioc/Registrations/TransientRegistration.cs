@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using RadFramework.Libraries.Ioc.Factory;
 using RadFramework.Libraries.Reflection.Caching;
 

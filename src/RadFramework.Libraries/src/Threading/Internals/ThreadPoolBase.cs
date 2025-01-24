@@ -1,7 +1,3 @@
-using System;
-using System.Runtime.InteropServices;
-using System.Threading;
-using RadFramework.Libraries.Threading.Internals.ThreadAffinity;
 using RadFramework.Libraries.Threading.ObjectRegistries;
 
 namespace RadFramework.Libraries.Threading.Internals
@@ -55,7 +51,7 @@ namespace RadFramework.Libraries.Threading.Internals
             ProcessWorkloadDelegate = processingDelegate;
             ProcessingThreadPriority = processingThreadPriority;
             
-            this.CreateThreads(processingThreadAmount, ProcessingLoop);
+            this.CreateThreads(processingThreadAmount, ProcessingLoop, processingThreadPriority, threadDescription);
         }
 
         /// <summary>
@@ -87,7 +83,7 @@ namespace RadFramework.Libraries.Threading.Internals
         protected virtual bool LoopShutdownReasonsApply()
         {
             // stop processing workloads when disposed or the thread is not in the pool anymore
-            return isDisposed || !this.ProcessingThreadRegistry.IsRegistered(Thread.CurrentThread);
+            return isDisposed || !this.ProcessingThreadRegistry.IsRegistered(PoolThread.GetPoolThread(Thread.CurrentThread));
         }
 
         /// <summary>
