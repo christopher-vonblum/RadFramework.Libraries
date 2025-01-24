@@ -22,6 +22,18 @@ public static class HttpRequestParser
         return urlString;
     }
     
+    public static string ExtractQueryString(string urlString)
+    {
+        int firstQuestionmarkIndex = urlString.IndexOf('?');
+
+        if (firstQuestionmarkIndex != -1)
+        {
+            return string.Empty;
+        }
+        
+        return urlString.Substring(firstQuestionmarkIndex);
+    }
+    
     public static string ExtractHttpVersion(string firstLine)
     {
         string versionString = "";

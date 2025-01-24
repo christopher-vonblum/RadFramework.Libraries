@@ -1,4 +1,6 @@
 using System.Net.Sockets;
+using RadFramework.Libraries.Threading.Internals;
+using RadFramework.Libraries.Threading.ThreadPools.Queued;
 
 namespace RadFramework.Libraries.Net.Http;
 
@@ -6,20 +8,31 @@ public class HttpServer : IDisposable
 {
     private readonly HttpRequestHandler processRequest;
     private SocketConnectionListener listener;
+    private QueuedThreadPool<Socket> httpRequestProcessingPool;
     
     public HttpServer(int port, HttpRequestHandler processRequest)
     {
         this.processRequest = processRequest;
         
+        httpRequestProcessingPool = 
+            new QueuedThreadPool<Socket>(
+                Environment.ProcessorCount,
+                ThreadPriority.Highest,
+                ProcessHttpSocketConnection);
+        
         listener = new SocketConnectionListener(
             SocketType.Stream,
             ProtocolType.Tcp,
             port,
-            ProcessSocketConnection);
-        
+            OnSocketAccepted);
     }
 
-    protected void ProcessSocketConnection(Socket socketConnection)
+    private void OnSocketAccepted(Socket connectionSocket)
+    {
+        httpRequestProcessingPool.Enqueue(connectionSocket);
+    }
+
+    private void ProcessHttpSocketConnection(Socket socketConnection)
     {
         NetworkStream networkStream = new NetworkStream(socketConnection);
         
@@ -31,6 +44,7 @@ public class HttpServer : IDisposable
         
         requestModel.Method = HttpRequestParser.ExtractHttpMethod(firstRequestLine);
         requestModel.Url = HttpRequestParser.ExtractUrl(firstRequestLine);
+        requestModel.QueryString = HttpRequestParser.ExtractQueryString(requestModel.Url);
         requestModel.HttpVersion = HttpRequestParser.ExtractHttpVersion(firstRequestLine);
 
         string currentHeaderLine = null;
