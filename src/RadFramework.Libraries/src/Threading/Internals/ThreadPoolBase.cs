@@ -1,4 +1,4 @@
-using RadFramework.Libraries.Threading.ObjectRegistries;
+using RadFramework.Libraries.Collections;
 
 namespace RadFramework.Libraries.Threading.Internals
 {

@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using RadFramework.Libraries.Extensibility.Pipeline;
-
-namespace RadFramework.Abstractions.Extensibility.Pipeline.Synchronous
+namespace RadFramework.Libraries.Extensibility.Pipeline.Synchronous
 {
     public class SynchronousPipeline<TIn, TOut> : IPipeline<TIn, TOut>
     {

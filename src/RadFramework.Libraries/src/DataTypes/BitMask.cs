@@ -1,4 +1,4 @@
-﻿namespace RadFramework.Libraries.Threading.Internals.ThreadAffinity
+﻿namespace RadFramework.Libraries.DataTypes
 {
     public class BitMask
     {

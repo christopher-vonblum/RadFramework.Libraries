@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace RadFramework.Libraries.Threading.ObjectRegistries
+namespace RadFramework.Libraries.Collections
 {
     /// <summary>
     /// A registry that holds references to objects with capabilities to check for objects and remove them.

@@ -1,4 +1,4 @@
-namespace RadFramework.Abstractions.Extensibility.Pipeline.Synchronous
+namespace RadFramework.Libraries.Extensibility.Pipeline.Synchronous
 {
     public abstract class SynchronousPipeBase<TInput, TOutput> : ISynchronousPipe
     {

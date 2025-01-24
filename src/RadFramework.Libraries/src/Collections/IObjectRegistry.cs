@@ -1,4 +1,4 @@
-﻿namespace RadFramework.Libraries.Threading.ObjectRegistries
+﻿namespace RadFramework.Libraries.Collections
 {
     public interface IObjectRegistry<TReferenceType> : IEnumerable<TReferenceType>
         where TReferenceType : class

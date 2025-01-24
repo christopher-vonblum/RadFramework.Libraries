@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using RadFramework.Libraries.Extensibility.Pipeline;
-
-namespace RadFramework.Abstractions.Extensibility.Pipeline.Asynchronous
+namespace RadFramework.Libraries.Extensibility.Pipeline.Asynchronous
 {
     public class IAsynchronousPipeline<TIn, TOut> : IPipeline<TIn, TOut>
     {

@@ -1,7 +1,7 @@
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 
-namespace RadFramework.Libraries.ConsoleGenericUi.Arguments
+namespace RadFramework.Libraries.GenericUi.Console.Arguments
 {
     public static class ArgumentParser
     {

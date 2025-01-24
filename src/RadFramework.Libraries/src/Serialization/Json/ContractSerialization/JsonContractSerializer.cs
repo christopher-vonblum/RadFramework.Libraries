@@ -4,11 +4,9 @@ using System.Text;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 using RadFramework.Libraries.Serialization.Json.Parser;
-using RadFramework.Libraries.Serialization.Json.Proxy;
 using RadFramework.Libraries.Serialization.Json.Writer;
-using DispatchProxy = RadFramework.Libraries.Reflection.DispatchProxy.DispatchProxy;
 
-namespace RadFramework.Libraries.Serialization.Json;
+namespace RadFramework.Libraries.Serialization.Json.ContractSerialization;
 
 public class JsonContractSerializer : IContractSerializer
 {
@@ -87,7 +85,7 @@ public class JsonContractSerializer : IContractSerializer
         }
         else if (jsonObject is JsonObject o)
         {
-            JsonObjectProxy stronglyTypedProxy = (JsonObjectProxy)DispatchProxy.Create(t, typeof(JsonObjectProxy));
+            JsonObjectProxy stronglyTypedProxy = (JsonObjectProxy)Reflection.DispatchProxy.DispatchProxy.Create(t, typeof(JsonObjectProxy));
             
             stronglyTypedProxy.Data = o;
             

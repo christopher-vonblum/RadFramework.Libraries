@@ -1,4 +1,4 @@
-﻿namespace RadFramework.Libraries.Threading.Patterns
+﻿namespace RadFramework.Libraries.Patterns
 {
     internal class Lazy<TValue> where TValue : class
     {

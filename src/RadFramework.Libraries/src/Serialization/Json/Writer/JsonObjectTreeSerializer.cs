@@ -1,5 +1,5 @@
 using System.Runtime.Serialization;
-using RadFramework.Libraries.Serialization.Json.Proxy;
+using RadFramework.Libraries.Serialization.Json.ContractSerialization;
 
 namespace RadFramework.Libraries.Serialization.Json.Writer;
 

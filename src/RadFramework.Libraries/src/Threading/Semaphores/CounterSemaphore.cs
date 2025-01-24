@@ -1,4 +1,4 @@
-using RadFramework.Libraries.Threading.ObjectPools;
+using RadFramework.Libraries.Collections;
 
 namespace RadFramework.Libraries.Threading.Semaphores
 {

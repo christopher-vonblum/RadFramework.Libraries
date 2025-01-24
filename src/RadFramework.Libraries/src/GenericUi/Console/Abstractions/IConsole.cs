@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.ConsoleGenericUi.Abstractions
+namespace RadFramework.Libraries.GenericUi.Console.Abstractions
 {
     public interface IConsole
     {

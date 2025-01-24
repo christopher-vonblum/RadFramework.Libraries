@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using RadFramework.Libraries.Net.Socket;
 using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.ThreadPools.Queued;
 
@@ -8,14 +9,14 @@ public class HttpServer : IDisposable
 {
     private readonly HttpRequestHandler processRequest;
     private SocketConnectionListener listener;
-    private QueuedThreadPool<Socket> httpRequestProcessingPool;
+    private QueuedThreadPool<System.Net.Sockets.Socket> httpRequestProcessingPool;
     
     public HttpServer(int port, HttpRequestHandler processRequest)
     {
         this.processRequest = processRequest;
         
         httpRequestProcessingPool = 
-            new QueuedThreadPool<Socket>(
+            new QueuedThreadPool<System.Net.Sockets.Socket>(
                 Environment.ProcessorCount,
                 ThreadPriority.Highest,
                 ProcessHttpSocketConnection);
@@ -27,12 +28,12 @@ public class HttpServer : IDisposable
             OnSocketAccepted);
     }
 
-    private void OnSocketAccepted(Socket connectionSocket)
+    private void OnSocketAccepted(System.Net.Sockets.Socket connectionSocket)
     {
         httpRequestProcessingPool.Enqueue(connectionSocket);
     }
 
-    private void ProcessHttpSocketConnection(Socket socketConnection)
+    private void ProcessHttpSocketConnection(System.Net.Sockets.Socket socketConnection)
     {
         NetworkStream networkStream = new NetworkStream(socketConnection);
         

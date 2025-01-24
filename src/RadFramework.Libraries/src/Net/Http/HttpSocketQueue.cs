@@ -5,8 +5,8 @@ namespace RadFramework.Libraries.Net.Http;
 
 public class HttpSocketQueue : IDisposable
 {
-    private readonly Action<Socket> processRequest;
-    private ConcurrentQueue<Socket> queue = new ConcurrentQueue<Socket>();
+    private readonly Action<System.Net.Sockets.Socket> processRequest;
+    private ConcurrentQueue<System.Net.Sockets.Socket> queue = new ConcurrentQueue<System.Net.Sockets.Socket>();
 
     private const int concurrentSocketProcessingThreadsLimit = 100;
 
@@ -18,7 +18,7 @@ public class HttpSocketQueue : IDisposable
     
     private bool disposed = false;
     
-    public HttpSocketQueue(Action<Socket> processRequest)
+    public HttpSocketQueue(Action<System.Net.Sockets.Socket> processRequest)
     {
         this.processRequest = processRequest;
 
@@ -26,7 +26,7 @@ public class HttpSocketQueue : IDisposable
         queueProcessingLauncherThread.Start();
     }
         
-    public void Enqueue(Socket clientConnectionSocket)
+    public void Enqueue(System.Net.Sockets.Socket clientConnectionSocket)
     {  
         queue.Enqueue(clientConnectionSocket);
         socketGotQueued.Set();
@@ -45,13 +45,13 @@ public class HttpSocketQueue : IDisposable
     private void TrySpawnProcessingThreads()
     {
         while (currentSocketProcessingThreadsAmount < concurrentSocketProcessingThreadsLimit
-            && queue.TryDequeue(out Socket clientConnectionSocket))
+            && queue.TryDequeue(out System.Net.Sockets.Socket clientConnectionSocket))
         {
             StartProcessingThread(clientConnectionSocket);
         }
     }
 
-    private void StartProcessingThread(Socket clientConnectionSocket)
+    private void StartProcessingThread(System.Net.Sockets.Socket clientConnectionSocket)
     {
         Thread processingThread = new Thread(() =>
         {

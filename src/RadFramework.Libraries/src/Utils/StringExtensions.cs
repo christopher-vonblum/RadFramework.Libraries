@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Core.Extensions
+namespace RadFramework.Libraries.Utils
 {
     public static class StringExtensions
     {

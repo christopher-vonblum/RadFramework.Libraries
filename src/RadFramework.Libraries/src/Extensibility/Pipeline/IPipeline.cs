@@ -1,4 +1,4 @@
-namespace RadFramework.Abstractions.Extensibility.Pipeline
+namespace RadFramework.Libraries.Extensibility.Pipeline
 {
     public interface IPipeline<TIn, TOut>
     {

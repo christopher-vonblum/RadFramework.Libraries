@@ -1,6 +1,4 @@
-using System;
-
-namespace RadFramework.Abstractions.Extensibility.Pipeline.Asynchronous
+namespace RadFramework.Libraries.Extensibility.Pipeline.Asynchronous
 {
     public interface IAsynchronousPipe
     {

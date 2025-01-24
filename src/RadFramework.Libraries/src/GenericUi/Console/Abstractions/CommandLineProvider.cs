@@ -1,15 +1,15 @@
-namespace RadFramework.Libraries.ConsoleGenericUi.Abstractions
+namespace RadFramework.Libraries.GenericUi.Console.Abstractions
 {
     public class CommandLineProvider : IConsole
     {
         public string ReadLine()
         {
-            return Console.ReadLine();
+            return System.Console.ReadLine();
         }
 
         public void WriteLine(string value)
         {
-            Console.WriteLine(value);
+            System.Console.WriteLine(value);
         }
     }
 }

@@ -1,6 +1,4 @@
-using System.Threading;
-
-namespace RadFramework.Abstractions.Extensibility.Pipeline.Asynchronous
+namespace RadFramework.Libraries.Extensibility.Pipeline.Asynchronous
 {
     public class AsynchronousPipeInvocationContext
     {

@@ -3,7 +3,7 @@ using System.Reflection;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 
-namespace RadFramework.Libraries.Ioc
+namespace RadFramework.Libraries.Ioc.Factory
 {
     public class DependencyInjectionLambdaGenerator
     {

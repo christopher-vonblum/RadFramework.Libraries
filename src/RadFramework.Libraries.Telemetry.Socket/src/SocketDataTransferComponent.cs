@@ -1,6 +1,7 @@
 using System;
 using System.Net.Sockets;
 using System.Threading;
+using RadFramework.Libraries.Telemetry.Abstractions;
 
 namespace RadFramework.Libraries.Telemetry.Socket;
 

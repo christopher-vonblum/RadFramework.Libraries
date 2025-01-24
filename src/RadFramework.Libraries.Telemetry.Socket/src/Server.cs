@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using RadFramework.Libraries.Serialization;
+using RadFramework.Libraries.Telemetry.Abstractions;
 using RadFramework.Libraries.Telemetry.Packages;
 using RadFramework.Libraries.Threading.Tasks;
 

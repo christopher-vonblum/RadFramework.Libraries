@@ -1,6 +1,6 @@
 using RadFramework.Libraries.Threading.Tasks;
 
-namespace RadFramework.Libraries.Telemetry
+namespace RadFramework.Libraries.Telemetry.Abstractions
 {
     public interface ITelemetryChannel
     {

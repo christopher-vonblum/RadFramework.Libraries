@@ -1,9 +1,9 @@
+using RadFramework.Libraries.Collections;
 using RadFramework.Libraries.Threading.Internals;
-using RadFramework.Libraries.Threading.ObjectPools;
 using RadFramework.Libraries.Threading.ThreadPools.Queued;
 using RadFramework.Libraries.Threading.ThreadPools.Simple;
 
-namespace RadFramework.Libraries.Telemetry;
+namespace RadFramework.Libraries.Telemetry.Abstractions;
 
 public class MultiplexTelemetryConnection
 {

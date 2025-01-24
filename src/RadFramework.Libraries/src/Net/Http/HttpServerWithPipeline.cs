@@ -1,4 +1,4 @@
-using RadFramework.Abstractions.Extensibility.Pipeline;
+using RadFramework.Libraries.Extensibility.Pipeline;
 
 namespace RadFramework.Libraries.Net.Http;
 

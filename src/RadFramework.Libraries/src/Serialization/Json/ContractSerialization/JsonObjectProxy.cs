@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Reflection;
 
-namespace RadFramework.Libraries.Serialization.Json.Proxy
+namespace RadFramework.Libraries.Serialization.Json.ContractSerialization
 {
     public class JsonObjectProxy : System.Reflection.DispatchProxy
     {

@@ -1,15 +1,15 @@
 using System.Reflection;
-using RadFramework.Libraries.ConsoleGenericUi.Abstractions;
+using RadFramework.Libraries.GenericUi.Console.Abstractions;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
-using RadFramework.Libraries.Serialization.Json;
+using RadFramework.Libraries.Serialization.Json.ContractSerialization;
 using RadFramework.Libraries.TextTranslation;
 using RadFramework.Libraries.TextTranslation.Abstractions;
 using RadFramework.Libraries.TextTranslation.Loaders;
 using Activator = RadFramework.Libraries.Reflection.Activation.Activator;
 
-namespace RadFramework.Libraries.ConsoleGenericUi.Interaction
+namespace RadFramework.Libraries.GenericUi.Console.Interaction
 {
     public class ConsoleInteractionProvider
     {
@@ -393,7 +393,7 @@ namespace RadFramework.Libraries.ConsoleGenericUi.Interaction
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine(e.ToString());
+                            System.Console.WriteLine(e.ToString());
                             _console.WriteLine(string.Format(_translationProvider.Translate("ProvideArgumentOfType"), parameterInfo.Name, parameterType.InnerMetaData.FullName));
                         }
                     }
@@ -453,7 +453,7 @@ namespace RadFramework.Libraries.ConsoleGenericUi.Interaction
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.ToString());
+                        System.Console.WriteLine(e.ToString());
                     }
                 }
                 

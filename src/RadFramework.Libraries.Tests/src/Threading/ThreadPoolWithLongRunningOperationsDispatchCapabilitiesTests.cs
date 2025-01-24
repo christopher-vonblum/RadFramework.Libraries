@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework;
-using RadFramework.Libraries.Threading.ObjectRegistries;
+using RadFramework.Libraries.Collections;
 using RadFramework.Libraries.Threading.ThreadPools.Simple;
 
 namespace RadFramework.Libraries.Threading.Tests
