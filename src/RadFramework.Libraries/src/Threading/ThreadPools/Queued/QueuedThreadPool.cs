@@ -30,20 +30,15 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         /// </summary>
         public CounterSemaphore ProcessIncomingWorkSemaphore { get; }
         
-        /// <summary>
-        /// A timer that triggers KickOffProcessingThreads in case a race condition occured and everything is stuck.
-        /// </summary>
-        private Timer processQueueTimer;
-        
         public QueuedThreadPool(
-            int processingPoolSize,
+            int threadAmountPerCore,
             ThreadPriority priority,
             Action<TQueueTask> processWorkloadDelegate,
             string threadDescription = null)
-            : base(processingPoolSize, priority, null, threadDescription)
+            : base(threadAmountPerCore, priority, null, threadDescription)
         {
-            processQueueTimer = new Timer((o) => this.TryKickOffProcessingThreads(), null, 0, 5000);
             ProcessWorkloadDelegate = processWorkloadDelegate;
+            ProcessIncomingWorkSemaphore = new CounterSemaphore(Environment.ProcessorCount * threadAmountPerCore);
             this.StartThreads();
         }
         
@@ -87,8 +82,6 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
             }
 
             base.Dispose();
-
-            processQueueTimer.Dispose();
             
             ProcessIncomingWorkSemaphore.Dispose();
         }

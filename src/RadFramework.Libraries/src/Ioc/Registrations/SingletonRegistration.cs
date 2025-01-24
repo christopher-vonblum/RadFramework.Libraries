@@ -6,7 +6,7 @@ namespace RadFramework.Libraries.Ioc.Registrations
     public class SingletonRegistration : TransientRegistration
     {
         private Lazy<object> singleton;
-        public SingletonRegistration(CachedType tImplementation, ServiceFactoryLambdaGenerator lambdaGenerator, Container container) : base(tImplementation, lambdaGenerator, container)
+        public SingletonRegistration(CachedType tImplementation, ServiceFactoryLambdaGenerator lambdaGenerator, IocContainer iocContainer) : base(tImplementation, lambdaGenerator, iocContainer)
         {
             singleton = new Lazy<object>(() => base.ResolveService());
         }

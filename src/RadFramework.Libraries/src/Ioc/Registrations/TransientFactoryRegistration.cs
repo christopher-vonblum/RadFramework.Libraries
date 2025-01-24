@@ -2,18 +2,18 @@
 {
     public class TransientFactoryRegistration : RegistrationBase
     {
-        private readonly Func<Container, object> factoryFunc;
-        private readonly Container container;
+        private readonly Func<IocContainer, object> factoryFunc;
+        private readonly IocContainer iocContainer;
 
-        public TransientFactoryRegistration(Func<Container, object> factoryFunc, Container container)
+        public TransientFactoryRegistration(Func<IocContainer, object> factoryFunc, IocContainer iocContainer)
         {
             this.factoryFunc = factoryFunc;
-            this.container = container;
+            this.iocContainer = iocContainer;
         }
         
         public override object ResolveService()
         {
-            return factoryFunc(container);
+            return factoryFunc(iocContainer);
         }
     }
 }

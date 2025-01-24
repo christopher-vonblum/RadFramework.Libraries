@@ -17,9 +17,10 @@ public class HttpServer : IDisposable
         
         httpRequestProcessingPool = 
             new QueuedThreadPool<System.Net.Sockets.Socket>(
-                Environment.ProcessorCount,
+                2,
                 ThreadPriority.Highest,
-                ProcessHttpSocketConnection);
+                ProcessHttpSocketConnection,
+                "RadFramework.Libraries.Net.Http.HttpServer-processing-pool");
         
         listener = new SocketConnectionListener(
             SocketType.Stream,
@@ -45,6 +46,7 @@ public class HttpServer : IDisposable
         
         requestModel.Method = HttpRequestParser.ExtractHttpMethod(firstRequestLine);
         requestModel.Url = HttpRequestParser.ExtractUrl(firstRequestLine);
+        requestModel.UrlPath = HttpRequestParser.ExtractUrl(firstRequestLine);
         requestModel.QueryString = HttpRequestParser.ExtractQueryString(requestModel.Url);
         requestModel.HttpVersion = HttpRequestParser.ExtractHttpVersion(firstRequestLine);
 
@@ -68,5 +70,6 @@ public class HttpServer : IDisposable
     public void Dispose()
     {
         listener.Dispose();
+        httpRequestProcessingPool.Dispose();
     }
 }

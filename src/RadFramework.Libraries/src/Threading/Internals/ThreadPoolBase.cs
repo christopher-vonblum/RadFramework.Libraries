@@ -45,9 +45,7 @@ namespace RadFramework.Libraries.Threading.Internals
         /// <param name="threadDescription">String description of the looping threads. Makes it easy to identify pool threads when listing threads with the debugger.</param>
         protected ThreadPoolBase(int processingThreadAmount, ThreadPriority processingThreadPriority, Action processingDelegate, string threadDescription = null)
         {
-            ThreadDescription = threadDescription
-                                     // Default loop thread description consisting of the method name and the implementation type that the MultiThreadProcessor derives from.
-                                     ?? $"loopedProcessingMethod:{processingDelegate.Method.DeclaringType?.FullName}.{processingDelegate.Method.Name}, ThreadPoolType:{GetType().FullName}";
+            ThreadDescription = threadDescription;
             ProcessWorkloadDelegate = processingDelegate;
             ProcessingThreadPriority = processingThreadPriority;
             

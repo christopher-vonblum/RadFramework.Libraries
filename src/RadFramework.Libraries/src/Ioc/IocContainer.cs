@@ -5,7 +5,7 @@ using RadFramework.Libraries.Reflection.Caching.Queries;
 
 namespace RadFramework.Libraries.Ioc
 {
-    public class Container : IServiceProvider, IContainer
+    public class IocContainer : IServiceProvider, IIocContainer
     {
         public IEnumerable<(Type serviceType, Func<object> resolve)> Services
         {
@@ -22,12 +22,12 @@ namespace RadFramework.Libraries.Ioc
         
         private ConcurrentDictionary<Type, RegistrationBase> registrations = new ConcurrentDictionary<Type, RegistrationBase>();
 
-        public Container(InjectionOptions injectionOptions)
+        public IocContainer(InjectionOptions injectionOptions)
         {
             this.injectionOptions = injectionOptions;
         }
 
-        public Container()
+        public IocContainer()
         {
             this.injectionOptions = new InjectionOptions
             {
@@ -70,12 +70,12 @@ namespace RadFramework.Libraries.Ioc
             }).InjectionOptions;
         }
 
-        public void RegisterSemiAutomaticTransient(Type tImplementation, Func<Container, object> construct)
+        public void RegisterSemiAutomaticTransient(Type tImplementation, Func<IocContainer, object> construct)
         {
             registrations[tImplementation] = new TransientFactoryRegistration(construct, this);
         }
         
-        public void RegisterSemiAutomaticTransient<TImplementation>(Func<Container, object> construct)
+        public void RegisterSemiAutomaticTransient<TImplementation>(Func<IocContainer, object> construct)
         {
             registrations[typeof(TImplementation)] = new TransientFactoryRegistration(construct, this);
         }
@@ -114,12 +114,12 @@ namespace RadFramework.Libraries.Ioc
             }).InjectionOptions;
         }
 
-        public void RegisterSemiAutomaticSingleton(Type tImplementation, Func<Container, object> construct)
+        public void RegisterSemiAutomaticSingleton(Type tImplementation, Func<IocContainer, object> construct)
         {
             registrations[tImplementation] = new SingletonFactoryRegistration(construct, this);
         }
         
-        public void RegisterSemiAutomaticSingleton<TImplementation>(Func<Container, object> construct)
+        public void RegisterSemiAutomaticSingleton<TImplementation>(Func<IocContainer, object> construct)
         {
             registrations[typeof(TImplementation)] = new SingletonFactoryRegistration(construct, this);
         }
@@ -132,11 +132,6 @@ namespace RadFramework.Libraries.Ioc
         public void RegisterSingletonInstance<TInterface>(object instance)
         {
             registrations[typeof(TInterface)] = new SingletonInstanceRegistration(instance);
-        }
-        
-        public void RegisterSingletonInstance<TImplementation>(TImplementation instance)
-        {
-            registrations[typeof(TImplementation)] = new SingletonInstanceRegistration(instance);
         }
 
         public T Activate<T>(InjectionOptions injectionOptions = null)

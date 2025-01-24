@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 
 namespace RadFramework.Libraries.Caching
 {
-    class SimpleCache : ISimpleCache
+    public class SimpleCache : ISimpleCache
     {
         private readonly SimpleCache _parentCache;
         private ConcurrentDictionary<string, object> cache = new ConcurrentDictionary<string, object>();

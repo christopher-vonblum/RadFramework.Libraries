@@ -1,11 +1,13 @@
+using RadFramework.Libraries.Ioc;
+
 namespace RadFramework.Libraries.Extensibility.Pipeline.Synchronous
 {
     public class SynchronousPipeline<TIn, TOut> : IPipeline<TIn, TOut>
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IIocContainer _serviceProvider;
         public LinkedList<ISynchronousPipe> definitions;
 
-        public SynchronousPipeline(PipelineDefinition<TIn, TOut> definition, IServiceProvider serviceProvider)
+        public SynchronousPipeline(PipelineDefinition<TIn, TOut> definition, IIocContainer serviceProvider)
         {
             _serviceProvider = serviceProvider;
             definitions = new LinkedList<ISynchronousPipe>(definition.Definitions.Select(CreatePipe));
@@ -18,7 +20,7 @@ namespace RadFramework.Libraries.Extensibility.Pipeline.Synchronous
 
         private ISynchronousPipe CreatePipe(PipeDefinition def)
         {
-            return (ISynchronousPipe) _serviceProvider.GetService(def.Type);
+            return (ISynchronousPipe) _serviceProvider.Activate(def.Type);
         }
 
         public TOut Process(TIn input)

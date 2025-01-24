@@ -4,7 +4,7 @@ namespace RadFramework.Libraries.Ioc.Registrations
     {
         private Lazy<object> singleton;
 
-        public SingletonFactoryRegistration(Func<Container, object> factoryFunc, Container container) : base(factoryFunc, container)
+        public SingletonFactoryRegistration(Func<IocContainer, object> factoryFunc, IocContainer iocContainer) : base(factoryFunc, iocContainer)
         {
             singleton = new Lazy<object>(() => base.ResolveService());
         }

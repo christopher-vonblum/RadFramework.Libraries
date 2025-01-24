@@ -11,15 +11,15 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="processingPoolSize"></param>
+        /// <param name="threadAmountPerCore"></param>
         /// <param name="priority"></param>
         /// <param name="threadDescription"></param>
         public QueuedDelegateSheduler(
-            int processingPoolSize,
+            int threadAmountPerCore,
             ThreadPriority priority,
             string threadDescription = null)
             : base(
-                processingPoolSize,
+                threadAmountPerCore,
                 priority,
                 (a) => a(),
                 threadDescription)

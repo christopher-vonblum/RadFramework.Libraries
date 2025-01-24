@@ -34,7 +34,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
         {
         }
         
-        public void RenderServiceOverview(IContainer container)
+        public void RenderServiceOverview(IIocContainer iocContainer)
         {
             while (true)
             {
@@ -44,7 +44,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
                 
                 Dictionary<int,(Type serviceType, Func<object> resolve)> choices = new Dictionary<int, (Type serviceType, Func<object> resolve)>();
 
-                foreach ((Type serviceType, Func<object> resolve) service in container.Services)
+                foreach ((Type serviceType, Func<object> resolve) service in iocContainer.Services)
                 {
                     _console.WriteLine($"{i}) {service.serviceType.FullName}");
                     choices[i] = service;
@@ -77,7 +77,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
                 
                 var selectedService = choices[choice];
 
-                RenderService(selectedService.serviceType, container.Resolve(selectedService.serviceType));
+                RenderService(selectedService.serviceType, iocContainer.Resolve(selectedService.serviceType));
             }
         }
 

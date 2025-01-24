@@ -11,7 +11,7 @@ public static class HttpRequestParser
     {
         string urlString = "";
 
-        int firstSpaceIndex = firstLine.IndexOf(' ');
+        int firstSpaceIndex = firstLine.IndexOf(' ') + 1;
         int lastSpaceIndex = firstLine.LastIndexOf(' ');
         
         for (int i = firstSpaceIndex; i < lastSpaceIndex; i++)
@@ -26,7 +26,7 @@ public static class HttpRequestParser
     {
         int firstQuestionmarkIndex = urlString.IndexOf('?');
 
-        if (firstQuestionmarkIndex != -1)
+        if (firstQuestionmarkIndex == -1)
         {
             return string.Empty;
         }

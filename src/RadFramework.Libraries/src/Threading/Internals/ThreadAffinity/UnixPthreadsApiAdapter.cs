@@ -21,13 +21,13 @@ class UnixPthreadsApiAdapter : IThreadAffinityApi
 
     private class Imports
     {
-        [DllImport("libLinuxThreadAffinityAdapter.so")]
+        [DllImport("dep/libLinuxThreadAffinityAdapter.so")]
         internal static extern ulong GetCurrentThreadId();
         
-        [DllImport("libLinuxThreadAffinityAdapter.so")]
+        [DllImport("dep/libLinuxThreadAffinityAdapter.so")]
         internal static extern void AssignAffinity(ulong threadId, int core);
         
-        [DllImport("libLinuxThreadAffinityAdapter.so")]
+        [DllImport("dep/libLinuxThreadAffinityAdapter.so")]
         internal static extern void ResetAffinityAndCleanup(ulong threadId);
     }
 }
