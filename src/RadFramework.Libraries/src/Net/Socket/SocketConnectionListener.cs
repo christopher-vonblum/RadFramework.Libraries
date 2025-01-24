@@ -22,6 +22,7 @@ public class SocketConnectionListener : IDisposable
         listenerSocket.Bind(endPoint);
         listenerSocket.Listen();
         acceptThread = new Thread(AcceptSockets);
+        acceptThread.Priority = ThreadPriority.Highest;
         acceptThread.Start();
     }
 
