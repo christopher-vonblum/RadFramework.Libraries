@@ -10,6 +10,8 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
     /// <typeparam name="TQueueTask">Type of the queue task.</typeparam>
     public class QueuedThreadPool<TQueueTask> : ThreadPoolBase, IQueuedThreadPoolMixinsConsumer<TQueueTask>
     {
+        private readonly Action<TQueueTask, PoolThread> processingWorkloadYieldedError;
+
         /// <summary>
         /// If true the queue processing will stop.
         /// </summary>
@@ -34,10 +36,21 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
             int threadAmountPerCore,
             ThreadPriority priority,
             Action<TQueueTask> processWorkloadDelegate,
+            Action<TQueueTask, PoolThread, Exception> processingWorkloadYieldedError,
             string threadDescription = null)
             : base(threadAmountPerCore, priority, null, threadDescription)
         {
-            ProcessWorkloadDelegate = processWorkloadDelegate;
+            ProcessWorkloadDelegate = task =>
+            {
+                try
+                {
+                    processWorkloadDelegate(task);
+                }
+                catch(Exception e)
+                {
+                    processingWorkloadYieldedError(task, PoolThread.GetPoolThread(Thread.CurrentThread), e);
+                }
+            };
             ProcessIncomingWorkSemaphore = new CounterSemaphore(Environment.ProcessorCount * threadAmountPerCore);
             this.StartThreads();
         }

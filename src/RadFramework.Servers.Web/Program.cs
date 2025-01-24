@@ -7,7 +7,6 @@ using RadFramework.Libraries.Logging;
 using RadFramework.Libraries.Net.Http;
 using RadFramework.Libraries.Serialization.Json.ContractSerialization;
 using RadFramework.Servers.Web.Config;
-using RadFramework.Servers.Web.Pipes;
 
 namespace RadFramework.Servers.Web
 {
@@ -20,10 +19,13 @@ namespace RadFramework.Servers.Web
             SetupIocContainer(iocContainer);
 
             PipelineDefinition httpPipelineDefinition = LoadHttpPipelineConfig();
+
+            ILogger logger = iocContainer.Resolve<ILogger>();
             
             HttpServerWithPipeline pipelineDrivenHttpServer = new HttpServerWithPipeline(
-                80, 
-                httpPipelineDefinition, 
+                80,
+                httpPipelineDefinition,
+                (socket, thread, e) => logger.LogError($"Thread: {thread.ThreadId}, Exception: {e}"),
                 iocContainer);
             
             Console.WriteLine("Press any key to continue...");
@@ -34,13 +36,33 @@ namespace RadFramework.Servers.Web
 
         private static void SetupIocContainer(IocContainer iocContainer)
         {
+            IocContainerConfig config = (IocContainerConfig)JsonContractSerializer.Instance.Deserialize(
+                typeof(IocContainerConfig),
+                File.ReadAllBytes("Config/IocContainerConfig.json"));
+
+            foreach (var iocRegistration in config.Registrations)
+            {
+                if (iocRegistration.Singleton)
+                {
+                    iocContainer.RegisterSingleton(
+                        Type.GetType(iocRegistration.TKey), 
+                        Type.GetType(iocRegistration.TImplementation));
+                    continue;
+                }
+                
+                iocContainer.RegisterTransient(
+                    Type.GetType(iocRegistration.TKey), 
+                    Type.GetType(iocRegistration.TImplementation));
+            }
+            
+            iocContainer.RegisterSingleton<HttpServerContext>();
             iocContainer.RegisterSingletonInstance<ISimpleCache>(new SimpleCache());
             iocContainer.RegisterSingletonInstance<ILogger>(
                 new StandardLogger(
                     new ILoggerSink[]
                     {
                         new ConsoleLogger(),
-                        new FileLogger("logs")
+                        new FileLogger("Logs")
                     }));
         }
 
@@ -52,7 +74,12 @@ namespace RadFramework.Servers.Web
                 typeof(HttpPipelineConfig),
                 File.ReadAllBytes("Config/HttpPipelineConfig.json"));
             
-            config.Pipes.ToList().ForEach(pipeType => httpPipelineDefinition.Append(Type.GetType(pipeType)));
+            config
+                .Pipes
+                .ToList()
+                .ForEach(pipeType => 
+                    httpPipelineDefinition.
+                        Append(Type.GetType(pipeType)));
 
             return httpPipelineDefinition;
         }

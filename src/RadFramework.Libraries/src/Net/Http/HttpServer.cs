@@ -11,7 +11,7 @@ public class HttpServer : IDisposable
     private SocketConnectionListener listener;
     private QueuedThreadPool<System.Net.Sockets.Socket> httpRequestProcessingPool;
     
-    public HttpServer(int port, HttpRequestHandler processRequest)
+    public HttpServer(int port, HttpRequestHandler processRequest, Action<System.Net.Sockets.Socket, PoolThread, Exception> onException)
     {
         this.processRequest = processRequest;
         
@@ -20,6 +20,7 @@ public class HttpServer : IDisposable
                 2,
                 ThreadPriority.Highest,
                 ProcessHttpSocketConnection,
+                onException,
                 "RadFramework.Libraries.Net.Http.HttpServer-processing-pool");
         
         listener = new SocketConnectionListener(
@@ -58,13 +59,18 @@ public class HttpServer : IDisposable
             requestModel.Headers.Add(header.header, header.value);
         }
 
-        processRequest(new HttpConnection
+        using (socketConnection)
+        using (networkStream)
+        using (requestReader)
         {
-            Request = requestModel,
-            RequestReader = requestReader,
-            UnderlyingStream = networkStream,
-            UnderlyingSocket = socketConnection
-        });
+            processRequest(new HttpConnection
+            {
+                Request = requestModel,
+                RequestReader = requestReader,
+                UnderlyingStream = networkStream,
+                UnderlyingSocket = socketConnection
+            });            
+        }
     }
 
     public void Dispose()

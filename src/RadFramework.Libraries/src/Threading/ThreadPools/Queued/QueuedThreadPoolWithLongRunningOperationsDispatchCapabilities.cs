@@ -59,13 +59,14 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
             int processingThreadAmount,
             ThreadPriority processingThreadPriority,
             Action<TQueueTask> processingMethod,
+            Action<TQueueTask, PoolThread, Exception> onWorkloadProcessingFailed,
             int dispatchLongRunningThreadTimeout,
             ThreadPriority longRunningOperationThreadsPriority,
             string threadDescription = null,
             Action<PoolThread> onShiftedToLongRunningOperationsPool = null, 
             int longRunningOperationLimit = 0,
             int longRunningOperationCancellationTimeout = 0) 
-            : base(processingThreadAmount, processingThreadPriority, processingMethod, threadDescription)
+            : base(processingThreadAmount, processingThreadPriority, processingMethod, onWorkloadProcessingFailed, threadDescription)
         {
             LongRunningThreadDispatchTimeout = dispatchLongRunningThreadTimeout;
             LongRunningOperationThreadsPriority = longRunningOperationThreadsPriority;

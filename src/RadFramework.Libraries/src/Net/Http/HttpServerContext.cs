@@ -1,15 +1,19 @@
 using RadFramework.Libraries.Caching;
+using RadFramework.Libraries.Logging;
 
 namespace RadFramework.Libraries.Net.Http;
 
 public class HttpServerContext
 {
-    private readonly ISimpleCache commonCache;
+    private readonly ISimpleCache cache;
+    private readonly ILogger logger;
 
-    public HttpServerContext(ISimpleCache commonCache)
+    public HttpServerContext(ISimpleCache cache, ILogger logger)
     {
-        this.commonCache = commonCache;
+        this.cache = cache;
+        this.logger = logger;
     }
 
-    public ISimpleCache CommonCache => commonCache;
+    public ISimpleCache Cache => cache;
+    public ILogger Logger => logger;
 }

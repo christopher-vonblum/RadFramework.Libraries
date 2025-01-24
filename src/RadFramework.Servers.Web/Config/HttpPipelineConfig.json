@@ -1,0 +1,6 @@
+{
+  "Pipes" : [
+    "RadFramework.Servers.Web.Pipelines.Http.StaticHtmlPipe, RadFramework.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "RadFramework.Servers.Web.Pipelines.Http.StaticIconPipe, RadFramework.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+  ]
+}

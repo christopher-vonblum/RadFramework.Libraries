@@ -8,8 +8,9 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
         public QueuedDelegateShedulerWithLongRunningOperationsDispatchCapabilities(
             int processingThreadAmount, 
             ThreadPriority processingThreadPriority,
-            int dispatchLongRunningThreadTimeout, 
-            ThreadPriority longRunningOperationThreadsPriority, 
+            int dispatchLongRunningThreadTimeout,
+            Action<Action, PoolThread, Exception> processingWorkloadYieldedError,
+            ThreadPriority longRunningOperationThreadsPriority,
             string threadDescription = null, 
             Action<PoolThread> onShiftedToLongRunningOperationsPool = null, 
             int longRunningOperationLimit = 0, 
@@ -17,7 +18,8 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
             : base(
                 processingThreadAmount,
                 processingThreadPriority,
-                delegate(Action action) { action();  }, 
+                delegate(Action action) { action();  },
+                processingWorkloadYieldedError,
                 dispatchLongRunningThreadTimeout,
                 longRunningOperationThreadsPriority,
                 threadDescription,

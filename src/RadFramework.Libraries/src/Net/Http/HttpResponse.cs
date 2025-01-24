@@ -38,22 +38,13 @@ public class HttpResponse : IDisposable
         writer.Close();
         writer.Dispose();
     }
-
-    private void EndCommunication()
-    {
-        connection.UnderlyingStream.Flush();
-        connection.UnderlyingStream.Dispose();
-
-        connection.UnderlyingSocket.Close();
-        connection.UnderlyingSocket.Dispose();
-    }
     
     private void SendHtmlDocument(HttpDocument document)
     {
         SendHeader("Content-type", $"text/html; charset={document.Encoding.WebName}");
         SendHeader("Content-Length", document.Body.Length.ToString());
         writer.WriteLine();
-        writer.Write(document.Body);
+        writer.Write(document.GetText());
         writer.Flush();
     }
     
@@ -80,7 +71,7 @@ public class HttpResponse : IDisposable
 
     private HttpDocument GetFileFromCacheOrDisk(string path)
     {
-        return connection.ServerContext.CommonCache.GetOrSet(
+        return connection.ServerContext.Cache.GetOrSet(
             path, 
             () => 
                 new HttpDocument

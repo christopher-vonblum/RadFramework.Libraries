@@ -11,16 +11,16 @@ public class StandardLogger : ILogger
 
     public void Log(string message)
     {
-        loggers.ForEach(l => l.Log("Log: " + message));
+        loggers.ForEach(l => l.Log($"[{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}]Log: " + message));
     }
 
     public void LogWarning(string message)
     {
-        loggers.ForEach(l => l.Log("Warning: " + message));
+        loggers.ForEach(l => l.Log($"[{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}]Warning: " + message));
     }
 
     public void LogError(string message)
     {
-        loggers.ForEach(l => l.Log("Error: " + message));
+        loggers.ForEach(l => l.Log($"[{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}]Error: " + message));
     }
 }

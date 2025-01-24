@@ -8,12 +8,13 @@ namespace RadFramework.Libraries.Reflection.DispatchProxy
         
         static DispatchProxy()
         {
-            createMethod = typeof(System.Reflection.DispatchProxy).GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
+            //createMethod = typeof(System.Reflection.DispatchProxy).GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
         }
 
         public static object Create(Type t, Type tProxy)
         {
-            return createMethod.MakeGenericMethod(t, tProxy).Invoke(null, null);
+            //return createMethod.MakeGenericMethod(t, tProxy).Invoke(null, null);
+            return System.Reflection.DispatchProxy.Create(t, tProxy);
         }
     }
 }

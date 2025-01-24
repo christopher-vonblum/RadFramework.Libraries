@@ -1,6 +1,6 @@
-namespace RadFramework.Libraries.Extensibility.Pipeline;
+namespace RadFramework.Libraries.Extensibility.Pipeline.Extension;
 
 public interface IExtensionPipe<TContext>
 {
-    void Process(TContext context);
+    void Process(TContext context, ExtensionPipeContext pipeContext);
 }

@@ -1,6 +1,0 @@
-{
-  "Pipes" : [
-    "RadFramework.Servers.Web.Pipes.StaticHtmlPipe, RadFramework.Servers.Web",
-    "RadFramework.Servers.Web.Pipes.StaticIconPipe, RadFramework.Servers.Web"
-  ]
-}

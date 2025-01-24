@@ -1,6 +1,6 @@
 namespace RadFramework.Servers.Web.Config;
 
-public class HttpPipelineConfig
+public interface HttpPipelineConfig
 {
-    public IEnumerable<string> Pipes { get; set; }
+    IEnumerable<string> Pipes { get; set; }
 }

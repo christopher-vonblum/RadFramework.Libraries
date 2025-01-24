@@ -1,13 +1,11 @@
-using RadFramework.Libraries.Extensibility.Pipeline.Synchronous;
+using RadFramework.Libraries.Extensibility.Pipeline.Extension;
 using RadFramework.Libraries.Net.Http;
-using RadFramework.Servers.Web.Pipelines;
 
-namespace RadFramework.Servers.Web.Pipes;
+namespace RadFramework.Servers.Web.Pipelines.Http;
 
 public class StaticIconPipe : IHttpPipe
 {
-    public void Process(HttpConnection input)
+    public void Process(HttpConnection context, ExtensionPipeContext pipeContext)
     {
-        throw new NotImplementedException();
     }
 }
