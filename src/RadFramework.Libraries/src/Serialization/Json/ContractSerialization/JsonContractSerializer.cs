@@ -13,33 +13,33 @@ public class JsonContractSerializer : IContractSerializer
 {
     public static JsonContractSerializer Instance { get; } = new JsonContractSerializer();
     
-    public byte[] Serialize(Type type, object model)
+    public byte[] Serialize(CachedType type, object model)
     {
         return Encoding.UTF8.GetBytes(SerializeToJsonString(type, model));
     }
     
-    public string SerializeToJsonString(Type type, object model)
+    public string SerializeToJsonString(CachedType type, object model)
     {
         IJsonObjectTreeModel jsonModel = (IJsonObjectTreeModel)CreateJsonObjectForSerialization(type, model);
         
         return new JsonObjectTreeSerializer().Serialize(jsonModel);
     }
 
-    public object CreateJsonObjectForSerialization(Type type, object obj)
+    public object CreateJsonObjectForSerialization(CachedType type, object obj)
     {
         if (type == typeof(string))
         {
             return obj;
         }
         
-        if (type.IsArray || typeof(IEnumerable).IsAssignableFrom(type))
+        if (type.InnerMetaData.IsArray || typeof(IEnumerable).IsAssignableFrom(type))
         {
             return CreateJsonArrayFromEnumerable((IEnumerable)obj);
         }
 
-        if (type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+        if (type.InnerMetaData.IsConstructedGenericType && type.InnerMetaData.GetGenericTypeDefinition() == typeof(Dictionary<,>))
         {
-            Type[] args = type.GetGenericArguments();
+            Type[] args = type.InnerMetaData.GetGenericArguments();
 
             return CreateJsonObjectFromDictionaryObject(args[0], args[1], obj);
         }
@@ -47,7 +47,7 @@ public class JsonContractSerializer : IContractSerializer
         return CreateJsonObjectFromRuntimeObject(type, obj);
     }
 
-    private object CreateJsonObjectFromDictionaryObject(Type tKey, Type tValue, object dictionary)
+    private object CreateJsonObjectFromDictionaryObject(CachedType tKey, Type tValue, object dictionary)
     {
         IEnumerable dict = ((IEnumerable)dictionary);
 
@@ -73,7 +73,7 @@ public class JsonContractSerializer : IContractSerializer
         return new JsonObject(properties);
     }
     
-    private object CreateJsonObjectFromRuntimeObject(Type objectType, object obj)
+    private object CreateJsonObjectFromRuntimeObject(CachedType objectType, object obj)
     {
         CachedType t = objectType ?? obj.GetType();
 
@@ -99,13 +99,13 @@ public class JsonContractSerializer : IContractSerializer
         return new JsonArray(arrayData);
     }
 
-    public object DeserializeFromJsonString(Type t, string jsonString)
+    public object DeserializeFromJsonString(CachedType t, string jsonString)
     {
         object jsonObject = DeserializeToJsonObject(jsonString);
 
-        if (t.IsArray || typeof(IEnumerable).IsAssignableFrom(t))
+        if (t.InnerMetaData.IsArray || typeof(IEnumerable).IsAssignableFrom(t))
         {
-            Type enumerableInterface = t.GetInterface(typeof(IEnumerable<>).Name);
+            Type enumerableInterface = t.InnerMetaData.GetInterface(typeof(IEnumerable<>).Name);
             
             Type jsonArrayProxyType = typeof(JsonArrayProxy<>).MakeGenericType(enumerableInterface.GetGenericArguments()[0]);
             
@@ -124,7 +124,7 @@ public class JsonContractSerializer : IContractSerializer
             
             return stronglyTypedProxy;
         }
-        else if (t.IsPrimitive)
+        else if (t.InnerMetaData.IsPrimitive)
         {
             return Convert.ChangeType(jsonObject, t);
         }
@@ -134,14 +134,14 @@ public class JsonContractSerializer : IContractSerializer
         }
     }
     
-    public object Deserialize(Type type, byte[] data)
+    public object Deserialize(CachedType type, byte[] data)
     {
         string json = Encoding.UTF8.GetString(data);
         
         return DeserializeFromJsonString(type, json);
     }
 
-    public object Clone(Type type, object model)
+    public object Clone(CachedType type, object model)
     {
         return Deserialize(
             type,

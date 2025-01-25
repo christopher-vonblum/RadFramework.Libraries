@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace RadFramework.Libraries.Net.Http;
 
 public class HttpRequest

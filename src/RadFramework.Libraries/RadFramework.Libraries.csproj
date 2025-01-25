@@ -7,10 +7,21 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
     <ItemGroup>
       <Folder Include="dep\" />
+      <Folder Include="src\DataTypes\Large\" />
       <Folder Include="src\Extensibility\" />
       <Folder Include="src\GenericUi\Console\" />
+      <Folder Include="src\Net\Telemetry\Pipelines\ConnectionEstablished\" />
+      <Folder Include="src\Net\Telemetry\Pipelines\PackageRecceived\" />
       <Folder Include="src\TextTranslation\" />
     </ItemGroup>
 
