@@ -9,13 +9,19 @@ namespace RadFramework.Libraries.Net.Http;
 public class HttpServer : IDisposable
 {
     private readonly HttpRequestHandler processRequest;
+    private readonly Action<System.Net.Sockets.Socket> webSocketConnected;
     private SocketConnectionListener listener;
     private QueuedThreadPool<System.Net.Sockets.Socket> httpRequestProcessingPool;
     
-    public HttpServer(int port, HttpRequestHandler processRequest, Action<System.Net.Sockets.Socket, PoolThread, Exception> onException)
+    public HttpServer(
+        int port,
+        HttpRequestHandler processRequest, 
+        Action<System.Net.Sockets.Socket, PoolThread, Exception> onException, 
+        Action<System.Net.Sockets.Socket> webSocketConnected = null)
     {
         this.processRequest = processRequest;
-        
+        this.webSocketConnected = webSocketConnected;
+
         httpRequestProcessingPool = 
             new QueuedThreadPool<System.Net.Sockets.Socket>(
                 2,
@@ -62,13 +68,15 @@ public class HttpServer : IDisposable
 
         bool upgradingToWebSocket = false;
         
-        if ((requestModel.Headers.ContainsKey("Upgrade") && requestModel.Headers["Upgrade"] == "websocket")
-            || (requestModel.Headers.ContainsKey("Connection") && requestModel.Headers["Connection"] == "Upgrade"))
+        if (webSocketConnected != null && ((requestModel.Headers.ContainsKey("Upgrade") && requestModel.Headers["Upgrade"] == "websocket")
+                                           || (requestModel.Headers.ContainsKey("Connection") && requestModel.Headers["Connection"] == "Upgrade")))
         {
             networkStream.Dispose();
             requestReader.Dispose();
+
+            webSocketConnected(socketConnection);
             
-            
+            return;
         }
             
         HttpConnection connection =

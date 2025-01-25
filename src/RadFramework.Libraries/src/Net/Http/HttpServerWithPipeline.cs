@@ -12,11 +12,16 @@ public class HttpServerWithPipeline : IDisposable
     private HttpServer server;
     private HttpServerContext ServerContext;
 
-    public HttpServerWithPipeline(int port, PipelineDefinition httpPipelineDefinition, Action<System.Net.Sockets.Socket, PoolThread, Exception> onException, IocContainer iocContainer)
+    public HttpServerWithPipeline(
+        int port,
+        PipelineDefinition httpPipelineDefinition,
+        Action<System.Net.Sockets.Socket, PoolThread, Exception> onException,
+        IocContainer iocContainer,
+        Action<System.Net.Sockets.Socket> webSocketConnected = null)
     {
         ServerContext = iocContainer.Resolve<HttpServerContext>();
         this.httpPipeline = new ExtensionPipeline<HttpConnection>(httpPipelineDefinition, iocContainer);
-        server = new HttpServer(port, ProcessRequestUsingPipeline, onException);
+        server = new HttpServer(port, ProcessRequestUsingPipeline, onException, webSocketConnected);
     }
 
     private void ProcessRequestUsingPipeline(HttpConnection connection)

@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.28)
+project(RadFramework_Libraries_Threading_ThreadAffinityNative C)
+
+set(CMAKE_C_STANDARD 11)
+
+add_library(RadFramework_Libraries_Threading_ThreadAffinityNative SHARED library.c)

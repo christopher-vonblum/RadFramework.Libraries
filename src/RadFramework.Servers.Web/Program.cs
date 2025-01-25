@@ -5,6 +5,7 @@ using RadFramework.Libraries.Extensibility.Pipeline.Synchronous;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Logging;
 using RadFramework.Libraries.Net.Http;
+using RadFramework.Libraries.Net.Socket;
 using RadFramework.Libraries.Serialization.Json.ContractSerialization;
 using RadFramework.Servers.Web.Config;
 
@@ -21,12 +22,17 @@ namespace RadFramework.Servers.Web
             PipelineDefinition httpPipelineDefinition = LoadHttpPipelineConfig();
 
             ILogger logger = iocContainer.Resolve<ILogger>();
+
+            iocContainer.RegisterSingleton<TelemetrySocketManager>();
+
+            TelemetrySocketManager socketManager = iocContainer.Resolve<TelemetrySocketManager>();
             
             HttpServerWithPipeline pipelineDrivenHttpServer = new HttpServerWithPipeline(
                 80,
                 httpPipelineDefinition,
                 (socket, thread, e) => logger.LogError($"Thread: {thread.ThreadId}, Exception: {e}"),
-                iocContainer);
+                iocContainer,
+                socket => socketManager.RegisterNewClientSocket(socket));
             
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
