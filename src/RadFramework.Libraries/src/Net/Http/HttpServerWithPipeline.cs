@@ -1,6 +1,5 @@
 using RadFramework.Libraries.Extensibility.Pipeline;
 using RadFramework.Libraries.Extensibility.Pipeline.Extension;
-using RadFramework.Libraries.Extensibility.Pipeline.Synchronous;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Threading.Internals;
 

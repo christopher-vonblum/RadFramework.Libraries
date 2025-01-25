@@ -1,8 +1,10 @@
+using RadFramework.Libraries.Reflection.Caching;
+
 namespace RadFramework.Libraries.Serialization;
 
 public interface IContractSerializer
 {
-    byte[] Serialize(Type type, object model);
-    object Deserialize(Type type, byte[] data);
-    object Clone(Type type, object model);
+    byte[] Serialize(CachedType type, object model);
+    object Deserialize(CachedType type, byte[] data);
+    object Clone(CachedType type, object model);
 }

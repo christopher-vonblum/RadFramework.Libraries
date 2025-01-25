@@ -1,5 +1,3 @@
-using System;
-
 namespace RadFramework.Libraries.Extensibility.Pipeline
 {
     [Serializable]
