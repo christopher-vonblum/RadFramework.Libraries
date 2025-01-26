@@ -7,5 +7,8 @@ namespace RadFramework.Libraries.Reflection.Caching
     
         public static implicit operator CachedType(Type type)
             => ReflectionCache.CurrentCache.GetCachedMetaData(type);
+        
+        public static implicit operator CachedType(string assemblyQualifiedName)
+            => ReflectionCache.CurrentCache.GetCachedMetaData(Type.GetType(assemblyQualifiedName));
     }
 }

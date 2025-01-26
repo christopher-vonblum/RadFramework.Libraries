@@ -1,7 +1,9 @@
+using RadFramework.Libraries.Net.Socket;
 using RadFramework.Libraries.Reflection.Caching;
+using RadFramework.Libraries.Serialization;
 using ZeroFormatter.Internal;
 
-namespace RadFramework.Libraries.Net.Socket;
+namespace RadFramework.Libraries.Net.Telemetry;
 
 public class TelemetryConnection : ITelemetryConnection
 {
@@ -22,11 +24,29 @@ public class TelemetryConnection : ITelemetryConnection
 
         PackageHeader header = (PackageHeader)SocketManager.HeaderSerializer.Deserialize(typeof(PackageHeader), serializedHeader);
         
+        return ReceivePackage(header);
+    }
+
+    private object ReceivePackage(PackageHeader header)
+    {
         byte[] serializedPackage = new byte[header.PayloadSize];
 
         SocketBond.ReceiveSocket.Receive(serializedPackage);
+
+        IContractSerializer serializer = 
+            header.PayloadSerializerType != null ?
+            (IContractSerializer)SocketManager
+            .SimpleCache
+            .GetOrSet(
+                header.PayloadSerializerType,
+                () => Type
+                    .GetType(header.PayloadSerializerType)
+                    .GetConstructor(null)
+                    .Invoke(null)) 
+            : SocketManager.HeaderSerializer;
         
-        return SocketManager.HeaderSerializer.Deserialize(Type.GetType(header.PayloadType), serializedPackage);
+        return serializer
+            .Deserialize(header.PayloadType, serializedPackage);
     }
 
     public void SendPackage(CachedType packageType, object package, byte[] responseToken = null)
@@ -40,6 +60,7 @@ public class TelemetryConnection : ITelemetryConnection
         // evaluate on per client base which request matches which response
         // means no global registry for req/res
         header.ResponseToken = responseToken;
+        header.
 
         byte[] serializedHeader = SocketManager.HeaderSerializer.Serialize(typeof(PackageHeader), header);
         

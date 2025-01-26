@@ -1,13 +1,19 @@
 using System.Collections.Concurrent;
+using RadFramework.Libraries.Caching;
 using RadFramework.Libraries.Net.Socket.Requests;
+using RadFramework.Libraries.Net.Telemetry;
 using RadFramework.Libraries.Serialization;
+using RadFramework.Libraries.Serialization.Json.ContractSerialization;
 using RadFramework.Libraries.Utils;
 
 namespace RadFramework.Libraries.Net.Socket;
 
 public class TelemetrySocketManager
 {
-    public IContractSerializer HeaderSerializer { get; set; }
+    public IContractSerializer HeaderSerializer { get; set; } = new JsonContractSerializer();
+
+    public ISimpleCache SimpleCache { get; set; } = new SimpleCache();
+    
     private ConcurrentDictionary<byte[], SocketBond> clientToSocketsMapping = new();
 
     public TelemetrySocketManager(IContractSerializer headerSerializer)

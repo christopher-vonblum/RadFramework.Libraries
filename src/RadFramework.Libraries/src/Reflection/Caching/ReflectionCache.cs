@@ -1,23 +1,13 @@
 using System.Collections.Concurrent;
 using System.Reflection;
+using RadFramework.Libraries.Caching;
 
 namespace RadFramework.Libraries.Reflection.Caching
 {
     public class ReflectionCache : IReflectionCache
     {
-        public static ReflectionCache CurrentCache
-        {
-            get
-            {
-                if (contextualCache == null)
-                {
-                    return DefaultInstance;
-                }
-
-                return contextualCache.Peek();
-            }
-        }
-
+        public static ReflectionCache CurrentCache => DefaultInstance;
+/*
         public static IDisposable UseCache(ReflectionCache cache)
         {
             if (contextualCache == null)
@@ -44,11 +34,16 @@ namespace RadFramework.Libraries.Reflection.Caching
             }
         }
         
-        private static ReflectionCache DefaultInstance = new ReflectionCache();
+        
 
         [ThreadStatic]
         private static Stack<ReflectionCache> contextualCache;
+        */
         
+        private static ReflectionCache DefaultInstance = new ReflectionCache();
+
+        public ISimpleCache Cache { get; } = new SimpleCache();
+
         private ConcurrentDictionary<object, string> keyCache = new ConcurrentDictionary<object, string>();
         private ConcurrentDictionary<string, object> cache = new ConcurrentDictionary<string, object>();
         
