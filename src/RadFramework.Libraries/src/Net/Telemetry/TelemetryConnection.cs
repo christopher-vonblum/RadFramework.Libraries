@@ -60,7 +60,7 @@ public class TelemetryConnection : ITelemetryConnection
         // evaluate on per client base which request matches which response
         // means no global registry for req/res
         header.ResponseToken = responseToken;
-        header.
+        //header.
 
         byte[] serializedHeader = SocketManager.HeaderSerializer.Serialize(typeof(PackageHeader), header);
         

@@ -35,6 +35,18 @@ public class HttpResponse : IDisposable
         writer.Flush();
     }
     
+    public void Send500(HttpDocument document = null)
+    {
+        writer.WriteLine(connection.Request.HttpVersion + " 500 Internal Server Error");
+
+        if (document != null)
+        {
+            SendHtmlDocument(document);
+        }
+        
+        writer.Flush();
+    }
+    
     public void SendHtmlDocument(HttpDocument document)
     {
         SendHeader("Content-type", $"text/html; charset={document.Encoding.WebName}");

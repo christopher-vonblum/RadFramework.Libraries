@@ -1,6 +1,7 @@
 using RadFramework.Libraries.Caching;
 using RadFramework.Libraries.Extensibility.Pipeline.Extension;
 using RadFramework.Libraries.Net.Http;
+using RadFramework.Libraries.Net.Http.Pipelined;
 
 namespace RadFramework.Servers.Web.Pipelines.Http;
 

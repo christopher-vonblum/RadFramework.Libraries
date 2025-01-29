@@ -6,6 +6,7 @@ using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Logging;
 using RadFramework.Libraries.Net.Http;
 using RadFramework.Libraries.Net.Socket;
+using RadFramework.Libraries.Serialization;
 using RadFramework.Libraries.Serialization.Json.ContractSerialization;
 using RadFramework.Servers.Web.Config;
 
@@ -19,10 +20,13 @@ namespace RadFramework.Servers.Web
             
             SetupIocContainer(iocContainer);
 
-            PipelineDefinition httpPipelineDefinition = LoadHttpPipelineConfig();
-
+            PipelineDefinition httpPipelineDefinition = LoadHttpPipelineConfig("Config/HttpPipelineConfig.json");
+            PipelineDefinition httpErrorPipelineDefinition = LoadHttpPipelineConfig("Config/HttpErrorPipelineConfig.json");            
+            
             ILogger logger = iocContainer.Resolve<ILogger>();
 
+            iocContainer.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
+            
             iocContainer.RegisterSingleton<TelemetrySocketManager>();
 
             TelemetrySocketManager socketManager = iocContainer.Resolve<TelemetrySocketManager>();
@@ -30,7 +34,7 @@ namespace RadFramework.Servers.Web
             HttpServerWithPipeline pipelineDrivenHttpServer = new HttpServerWithPipeline(
                 80,
                 httpPipelineDefinition,
-                (socket, thread, e) => logger.LogError($"Thread: {thread.ThreadId}, Exception: {e}"),
+                httpErrorPipelineDefinition,
                 iocContainer,
                 socket => socketManager.RegisterNewClientSocket(socket));
             
@@ -61,7 +65,7 @@ namespace RadFramework.Servers.Web
                     Type.GetType(iocRegistration.TImplementation));
             }
             
-            iocContainer.RegisterSingleton<HttpServerContext>();
+            
             iocContainer.RegisterSingletonInstance<ISimpleCache>(new SimpleCache());
             iocContainer.RegisterSingletonInstance<ILogger>(
                 new StandardLogger(
@@ -72,13 +76,13 @@ namespace RadFramework.Servers.Web
                     }));
         }
 
-        private static PipelineDefinition LoadHttpPipelineConfig()
+        private static PipelineDefinition LoadHttpPipelineConfig(string configFilePath)
         {
             PipelineDefinition httpPipelineDefinition = new();
 
             HttpPipelineConfig config = (HttpPipelineConfig)JsonContractSerializer.Instance.Deserialize(
                 typeof(HttpPipelineConfig),
-                File.ReadAllBytes("Config/HttpPipelineConfig.json"));
+                File.ReadAllBytes(configFilePath));
             
             config
                 .Pipes

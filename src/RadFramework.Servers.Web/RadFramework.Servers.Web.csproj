@@ -13,7 +13,7 @@
 
     <ItemGroup>
       <None Update="wwwroot\index.html">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </None>
       <None Update="wwwroot\favicon.ico">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -31,6 +31,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="wwwroot\websockets.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Config\HttpErrorPipelineConfig.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

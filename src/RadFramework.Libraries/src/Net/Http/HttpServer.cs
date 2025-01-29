@@ -66,10 +66,8 @@ public class HttpServer : IDisposable
             requestModel.Headers.Add(header.header, header.value);
         }
 
-        bool upgradingToWebSocket = false;
-        
-        if (webSocketConnected != null && ((requestModel.Headers.ContainsKey("Upgrade") && requestModel.Headers["Upgrade"] == "websocket")
-                                           || (requestModel.Headers.ContainsKey("Connection") && requestModel.Headers["Connection"] == "Upgrade")))
+        if (webSocketConnected != null && ((requestModel.Headers.ContainsKey("Upgrade") && requestModel.Headers["Upgrade"] == "websocket") 
+                                        && (requestModel.Headers.ContainsKey("Connection") && requestModel.Headers["Connection"] == "Upgrade")))
         {
             networkStream.Dispose();
             requestReader.Dispose();
@@ -94,7 +92,7 @@ public class HttpServer : IDisposable
         }
         catch (Exception e)
         {
-            connection.ServerContext.Logger.LogError("Error while processing request: \r\n" + JsonContractSerializer.Instance.SerializeToJsonString(typeof(HttpRequest), requestModel) + "\r\n" + e.ToString());
+            connection.ServerContext.Logger.LogError("Error while processing request: \r\n" + JsonContractSerializer.Instance.SerializeToJsonString(typeof(HttpRequest), requestModel) + "\n" + e.ToString());
         }
         
         networkStream.Flush();

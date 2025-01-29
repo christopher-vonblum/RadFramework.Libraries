@@ -1,0 +1,5 @@
+{
+  "Pipes" : [
+    "RadFramework.Servers.Web.Pipelines.HttpError.Send500InternalServerError, RadFramework.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+  ]
+}
